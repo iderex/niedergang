@@ -56,11 +56,21 @@ it, and a reader who wants to know whether the two have drifted apart runs:
     diff <(grep '^## ' docs/decisions/0000-template.md) \
          <(grep '^## ' docs/decisions/0001-decision-records.md)
 
-Empty output is agreement. The same command with any other record in the second
-position says whether that record carries every required field. There is one
-list of fields in this project and it is the template's headings; this paragraph
-deliberately does not repeat them, because a second copy is a copy that can go
-stale while still reading as authoritative.
+Empty output is agreement. There is one list of fields in this project and it is
+the template's headings; this paragraph deliberately does not repeat them,
+because a second copy is a copy that can go stale while still reading as
+authoritative.
+
+Every record carries every one of those headings, in that order, and a record
+may add sections of its own after them. A record citing sources is the case that
+forced this sentence. So the check for a record other than this one is presence
+rather than equality:
+
+    comm -23 <(grep '^## ' docs/decisions/0000-template.md | sort) \
+             <(grep '^## ' docs/decisions/0003-object-oriented-breakup.md | sort)
+
+Empty output means the record is missing no required heading. It says nothing
+about the order, and nothing about what is written underneath.
 
 Two of the fields are the reason this format was not taken off a shelf
 unchanged. Most decision record formats stop at the reasons for the option
