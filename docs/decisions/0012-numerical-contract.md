@@ -112,10 +112,13 @@ The settings that hold the enforced property. Record 0002 fixes the first two
 and this record adds the rest.
 
 No relaxed floating point anywhere, in this tree or in any dependency that
-performs arithmetic on the tool's behalf. Rust performs no reassociation or
-contraction on ordinary operators, so the exposure is a dependency built through
-a C compiler with fast math enabled, and a dependency that does so is not
-adopted.
+performs arithmetic on the tool's behalf. The language is understood to perform
+no reassociation or contraction on ordinary operators, and that is a claim
+rather than something this tree checks, because there is no code here for a
+check to read. So the rule is written as a rule and not as an inherited
+guarantee: no build setting, intrinsic or dependency that permits either is
+adopted, which includes a dependency built through a C compiler with fast math
+enabled.
 
 The target is named rather than detected. A build tuned to the machine that ran
 it makes the build host an input to the answer, so the target specification is
@@ -149,6 +152,11 @@ platform: addition, subtraction, multiplication, division, square root, the
 remainder, the fused multiply-add, and conversions between the binary formats and
 between binary and decimal. These carry no cross-platform risk and the tool uses
 them freely.
+
+The division above is taken from the standard's own separation between the
+operations it requires and the ones it recommends. No clause is cited, because
+the text was not opened for this record, and a reader who needs the citation
+rather than the division should treat this paragraph as the claim it is.
 
 Not guaranteed by the standard, and therefore the source of every cross-platform
 difference this record is about: the sine, cosine and tangent and their inverses,
