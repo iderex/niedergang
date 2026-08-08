@@ -1,0 +1,55 @@
+# Line endings and what may be rewritten on the way into version control.
+# The reasoning is in docs/decisions/0013-workspace-layout.md.
+#
+# The default is the safe direction rather than the convenient one: a path that
+# matches nothing below is stored byte for byte. A file this repository has not
+# thought about is more likely to be a fixture whose bytes matter than prose
+# whose bytes do not, and a fixture silently normalised is a test that changed
+# without a diff.
+* -text
+
+# Prose and source. Normalised to LF in the repository and checked out as LF on
+# every platform, so a clone on Windows and a clone on Linux hold the same bytes
+# and a diff never turns into a whole-file rewrite.
+*.md            text eol=lf
+*.rs            text eol=lf
+*.toml          text eol=lf
+*.yml           text eol=lf
+*.yaml          text eol=lf
+*.json          text eol=lf
+
+# Configuration files with no extension, listed one by one because a wildcard
+# for them would also catch the fixtures below.
+.gitattributes  text eol=lf
+.gitignore      text eol=lf
+.editorconfig   text eol=lf
+
+# Shell and hook scripts. LF is not cosmetic here: a CR at the end of a shebang
+# line makes the interpreter path unfindable, and the failure names a file that
+# looks correct.
+*.sh            text eol=lf
+.githooks/*     text eol=lf
+
+# Data this tool reads. Not normalised, because a scenario, a material table or
+# a population grid is an input whose bytes are the input, and a reader who
+# checks a value against its source has to be looking at the source.
+data/**         -text
+*.csv           -text
+*.tsv           -text
+*.tif           -text
+*.tiff          -text
+*.nc            -text
+*.parquet       -text
+
+# Fixtures and validation cases. The same rule as data, and the reason is
+# sharper: a fixture exists to prove that a specific byte sequence is handled a
+# specific way, so a rule that rewrites any of those bytes deletes the thing the
+# fixture was for.
+tests/**        -text
+**/fixtures/**  -text
+
+# Published text carried unchanged. The Developer Certificate of Origin is
+# reproduced verbatim and is not this repository's to reformat.
+DCO             -text
+LICENSE         -text
+LICENCE         -text
