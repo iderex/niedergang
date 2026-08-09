@@ -82,11 +82,24 @@ tool that disagrees with every established code on a benchmark object has
 something to explain. It must never be presented as validation against a
 reentry, in the README, in the tool's output, or in a report.
 
-This tier is empty today, and it is empty for a stated reason rather than
-because nothing exists. The survey that collects what the agency codes compute
-and publish is issue #2, and it has not landed. When it does, its published
-benchmark objects and their computed demise altitudes and casualty areas enter
-here, and this section names them.
+This tier is empty today because the search for its cases was run and came back
+empty. `docs/survey/existing-codes.md` read the codes' own documentation and the
+published papers about them, and it records that validation for SESAM, DAS and
+PAMPERO was not found as published case results. The nearest thing it found is a
+2024 presentation applying the CNES tools to the January 1997 Delta II second
+stage reentry, which it marks as a validation activity rather than a published
+result it read. So nothing read for that survey carries one object with its
+geometry, materials, masses, entry state and the results a code produced for it,
+which is the whole of what a tier 3 row needs.
+
+That is a finding about what this field publishes rather than a note about work
+outstanding here, and the two read differently: a tier empty pending work is a
+gap that will close, and a tier empty after a search is a statement about the
+sources. What the search does not cover is worth naming with it. It read the
+codes' own documentation and papers about them, and the reentry conference
+proceedings were not searched for a reproducible case specifically. If such a
+case is found or published, its object and the demise altitudes and casualty
+areas a code computed for it enter here and this section names them.
 
 What a pass in tier 3 would prove. That this tool sits inside the spread of
 codes already in use, so a user who has to justify a number can say it is not an
