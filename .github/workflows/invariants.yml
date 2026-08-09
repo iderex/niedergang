@@ -1,0 +1,212 @@
+# The greppable invariants gate of issue #35. A small set of properties that can
+# be decided by reading the tree, each one a rule this check refuses rather than
+# a sentence somebody has to remember.
+#
+# One invariant is carried today, because one is all that has a subject. The
+# tracked tree is documents and workflow files, so every invariant #35 names over
+# source files has nothing to read. The exception is the shape of a decision
+# record: the records exist, and `docs/decisions/0001-decision-records.md` names
+# this gate as the place a record missing a required heading is refused, and says
+# that until it does, its own comparison is run by a person or not at all.
+#
+# The last step prints the invariants this gate does not carry and what each one
+# waits on, so a green check here cannot be read as the whole list being enforced.
+#
+# The refusal is proved before it is trusted. The fixtures run first, and each one
+# is a copy of a landed record differing from it by one line, so a checker that
+# refused nothing would fail this workflow before it reached the tree.
+name: invariants
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+# Explicit deny-all at workflow level; the job below grants only what it reads with.
+permissions: {}
+
+# Cancel a superseded run on the same ref so a new push or pull request update does
+# not queue behind an obsolete run. This job reads the tree and publishes nothing,
+# so cancelling it is safe.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  invariants:
+    name: Enforce greppable invariants
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read # checkout the tree to read
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # No step pushes via git, so do not persist the GITHUB_TOKEN in .git/config.
+          persist-credentials: false
+
+      - name: Write the checker
+        # One implementation, used by the fixtures below and by the tree after them.
+        # A second copy for the fixtures would prove a copy rather than the checker.
+        #
+        # The comparison is the one docs/decisions/0001-decision-records.md publishes
+        # as its own mechanism rather than a second reading of it: the required fields
+        # are the second level headings of docs/decisions/0000-template.md, that file
+        # is the authority for the list, and a record is checked for presence rather
+        # than equality so that a record may add sections of its own after them. It
+        # says nothing about the order of the headings and nothing about what is
+        # written underneath, and neither does this.
+        run: |
+          mkdir -p "$RUNNER_TEMP/gate"
+          cat > "$RUNNER_TEMP/gate/check-record-headings.sh" <<'CHECKER'
+          #!/usr/bin/env bash
+          set -euo pipefail
+
+          root=${1:?usage: check-record-headings.sh <decisions-directory>}
+          template="$root/0000-template.md"
+
+          if [ ! -f "$template" ]; then
+            echo "::error::no template at $template, so the authority for the required headings is missing"
+            exit 1
+          fi
+
+          required=$(grep '^## ' "$template" | sort)
+          if [ -z "$required" ]; then
+            echo "::error file=$template::the template carries no second level heading, so there is nothing to require"
+            exit 1
+          fi
+
+          found=0
+          rc=0
+          for record in "$root"/[0-9][0-9][0-9][0-9]-*.md; do
+            if [ ! -f "$record" ]; then continue; fi
+            if [ "$record" = "$template" ]; then continue; fi
+            found=$((found + 1))
+            missing=$(comm -23 <(printf '%s\n' "$required") <(grep '^## ' "$record" | sort) || true)
+            if [ -n "$missing" ]; then
+              while IFS= read -r heading; do
+                echo "::error file=$record::missing required heading: $heading"
+              done <<< "$missing"
+              rc=1
+            else
+              echo "carries every required heading: $record"
+            fi
+          done
+
+          # A run that read no record refused nothing, and a gate that passes on an
+          # empty subject is the shape this one exists to avoid.
+          if [ "$found" -eq 0 ]; then
+            echo "::error::no decision record found under $root, so this run refused nothing"
+            exit 1
+          fi
+
+          echo "records read: $found"
+          exit $rc
+          CHECKER
+          chmod +x "$RUNNER_TEMP/gate/check-record-headings.sh"
+
+      - name: Prove the record heading invariant bites
+        # The near miss is a record missing one heading rather than a file that is not
+        # a record at all. Each fixture is a copy of a landed record differing from it
+        # by one line, and each leg asserts what was refused rather than that something
+        # was refused, so a checker that reddened on everything would fail leg 1.
+        run: |
+          set -euo pipefail
+          checker="$RUNNER_TEMP/gate/check-record-headings.sh"
+          src=docs/decisions
+          work="$RUNNER_TEMP/gate/fixtures"
+
+          build() {
+            rm -rf "$1"
+            mkdir -p "$1"
+            cp "$src/0000-template.md" "$1/0000-template.md"
+            cp "$src/0001-decision-records.md" "$1/0001-fixture.md"
+          }
+
+          # Leg 1, the neighbour. The copy is unchanged, so nothing is refused.
+          build "$work/clean"
+          if out=$(bash "$checker" "$work/clean" 2>&1); then
+            echo "leg 1 passed: an unchanged record is not refused"
+          else
+            echo "::error::leg 1 failed: an unchanged record was refused"
+            printf '%s\n' "$out"
+            exit 1
+          fi
+
+          # Leg 2, the heading is deleted. Record 0001 requires "Reasons against" and
+          # says a record whose author could find no argument against the option taken
+          # has not looked, so it is the heading most worth proving on.
+          build "$work/deleted"
+          grep -v '^## Reasons against$' "$work/clean/0001-fixture.md" > "$work/deleted/0001-fixture.md"
+          if diff -q "$work/clean/0001-fixture.md" "$work/deleted/0001-fixture.md" >/dev/null; then
+            echo "::error::leg 2 fixture is identical to the clean one, so it proves nothing"
+            exit 1
+          fi
+          if out=$(bash "$checker" "$work/deleted" 2>&1); then
+            echo "::error::leg 2 failed: a record missing '## Reasons against' was not refused"
+            printf '%s\n' "$out"
+            exit 1
+          fi
+          if ! printf '%s\n' "$out" | grep -q 'missing required heading: ## Reasons against'; then
+            echo "::error::leg 2 failed: refused, but not for the heading that was removed"
+            printf '%s\n' "$out"
+            exit 1
+          fi
+          if [ "$(printf '%s\n' "$out" | grep -c 'missing required heading')" -ne 1 ]; then
+            echo "::error::leg 2 failed: one heading was removed and more than one was reported"
+            printf '%s\n' "$out"
+            exit 1
+          fi
+          echo "leg 2 passed: a record missing one required heading is refused, naming that heading and no other"
+
+          # Leg 3, the one character mistake. The heading is present, demoted a level.
+          # It reads as a heading to somebody scrolling and is not one.
+          build "$work/demoted"
+          sed 's/^## Reasons against$/### Reasons against/' "$work/clean/0001-fixture.md" > "$work/demoted/0001-fixture.md"
+          if diff -q "$work/clean/0001-fixture.md" "$work/demoted/0001-fixture.md" >/dev/null; then
+            echo "::error::leg 3 fixture is identical to the clean one, so it proves nothing"
+            exit 1
+          fi
+          if out=$(bash "$checker" "$work/demoted" 2>&1); then
+            echo "::error::leg 3 failed: a heading demoted to the third level was not refused"
+            printf '%s\n' "$out"
+            exit 1
+          fi
+          if ! printf '%s\n' "$out" | grep -q 'missing required heading: ## Reasons against'; then
+            echo "::error::leg 3 failed: refused, but not for the demoted heading"
+            printf '%s\n' "$out"
+            exit 1
+          fi
+          echo "leg 3 passed: a required heading demoted to the third level is refused"
+
+          echo "the record heading invariant bites, proved on three fixtures"
+
+      - name: Every decision record carries every required heading
+        run: bash "$RUNNER_TEMP/gate/check-record-headings.sh" docs/decisions
+
+      - name: Invariants this gate does not carry, and what each waits on
+        # Printed rather than written into a document, so that what the gate covers
+        # comes from the gate. A run that covered one invariant cannot be read as one
+        # that covered the list.
+        run: |
+          cat <<'NOTCARRIED'
+          Carried by this run: the shape of a decision record.
+
+          Not carried, one line each, with what it waits on. Every one of these reads
+          source files, and the tracked tree has none, so each has an empty subject
+          rather than a missing implementation.
+
+            no network call outside the separate fetch command   waits on #24 and on source existing
+            the layer dependency direction                       waits on #26
+            no unit-bearing quantity from a bare number          waits on #14 and on source existing
+            no hardcoded physical constant outside its module    waits on #26
+            no default for a missing material property           rule is in docs/decisions/0010-refusals.md, waits on source
+            every elementary function call through one module    required by docs/decisions/0012-numerical-contract.md, waits on source
+            a licence header on every source file                waits on #87, which does not choose
+
+          The last one is not merely pending. It waits on a decision rather than on
+          work, and counting it with the others would read as closer than it is.
+          NOTCARRIED
