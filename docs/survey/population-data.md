@@ -8,8 +8,9 @@ candidates that could be checked from public sources.
 Two things decided the shape of the document. Every number in the table below
 either carries a source or was measured with a command that is quoted with it,
 and the properties that matter most to a reentry footprint, which are the ones
-about water, the poles and the antimeridian, are recorded separately because
-they are the ones the data set pages do not answer.
+about water, the poles and the antimeridian, are recorded separately because the
+data set pages do not answer them. Where a file could be opened those properties
+are read out of it instead, and where it could not the section says so.
 
 ## The candidates
 
@@ -36,14 +37,21 @@ publishers' own file servers.
     Content-Length: 5097074334
     Content-Type: application/zip
 
+    curl -sIL https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/GHSL/GHS_POP_GLOBE_R2023A/GHS_POP_E2020_GLOBE_R2023A_4326_30ss/V1-0/GHS_POP_E2020_GLOBE_R2023A_4326_30ss_V1_0.zip
+    HTTP/1.1 200 OK
+    Accept-Ranges: bytes
+    Content-Length: 482351880
+    Content-Type: application/zip
+
     curl -sIL https://data.worldpop.org/GIS/Population/Global_2000_2020/2020/0_Mosaicked/ppp_2020_1km_Aggregated.tif
     HTTP/1.1 200 OK
     Content-Length: 869715253
     Content-Type: image/tiff
 
-So the global GHS-POP grid for one epoch is 322 MB compressed at 1 km and 5.1 GB
-compressed at 100 m, and the WorldPop global 1 km mosaic for 2020 is 870 MB as an
-uncompressed GeoTIFF. The 100 m figure settles one thing on its own: a 100 m
+So the global GHS-POP grid for one epoch is 322 MB compressed at 1 km in
+Mollweide, 482 MB compressed at 30 arc-second in WGS84 and 5.1 GB compressed at
+100 m, and the WorldPop global 1 km mosaic for 2020 is 870 MB as an uncompressed
+GeoTIFF. The 100 m figure settles one thing on its own: a 100 m
 global grid is not going inside a downloadable artefact, whatever its licence
 says.
 
@@ -102,45 +110,205 @@ compare two results at all.
 A reentry footprint is a long thin object that crosses all three, so this section
 is the one that decides whether a grid is usable rather than merely licensed.
 
-Over water, only one candidate's handling could be established, and the way it
-is established is the finding. GPW v4.11 does not encode water in the population
-grid at all. It ships a separate Water Mask product whose single band classifies
-each cell as "0: Total water pixels that are completely water and/or permanent
-ice", "1: Partial water pixels that also contain land", "2: Total land pixels"
-or "3: Ocean pixels" [5]. Applying it is the consumer's job, which means a
-population sum over a coastal or oceanic footprint that skips the mask is wrong
-in a direction nobody notices.
+Two of the four candidates could be read from their own files, and for those the
+file is the source below rather than the page describing it. The other two are
+not obtainable without an account and the last section says what that leaves.
 
-For GHS-POP, LandScan Global and WorldPop, no statement of the NoData value or
-of how water and unpopulated cells are encoded was found in the pages read,
-including each product's own catalogue entry. That absence is itself the thing
-to act on rather than a gap to fill by assumption: a grid whose NoData is a
-negative sentinel and a grid whose NoData is zero give different answers to the
-same footprint, and the difference is invisible in the output. Reading the value
-out of each file is the next step and it is not done here.
+### Reading the corner of the file that answers this
 
-At the poles, the two CRS families behave differently and both behaviours are
-properties of the projection rather than of the data. In the WGS84 geographic
-grids used by GPW v4.11, LandScan Global, WorldPop and the WGS84 variants of
-GHS-POP, the grid is a plate carree covering 90 N to 90 S, so cells exist all the
-way to the pole and their ground area shrinks toward zero. LandScan Global states
-its extent as exactly that, 21,600 rows by 43,200 columns from 90 N to 90 S [3].
-A population per unit area computed from a count per cell is therefore wrong near
-the poles unless the cell's true ground area is used. In the Mollweide grids of
-GHS-POP the cells are equal area by construction and the pole is a point, which
-removes that error and introduces a different one, because the footprint has to
-be reprojected before it can be laid over the grid.
+A GeoTIFF carries its no-data value, its cell size and the position of its first
+cell in tags at the front of the file, so the questions above can be answered
+without the raster behind them. The JRC file server honours a byte range and the
+GeoTIFF is the first member of each archive, so the front of the archive is
+enough:
 
-At the antimeridian, the WGS84 grids have their edge exactly there: the array
-runs from 180 W to 180 E and a footprint crossing that line is two pieces in
-array coordinates. Nothing in the sources read describes any of these grids
-wrapping, so the wrap is the tool's problem. The Mollweide grid has the same
-break in a different place, at the projection's outer boundary, which also falls
-on the antimeridian.
+    curl -s -r 0-599999 https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/GHSL/GHS_POP_GLOBE_R2023A/GHS_POP_E2020_GLOBE_R2023A_4326_30ss/V1-0/GHS_POP_E2020_GLOBE_R2023A_4326_30ss_V1_0.zip > ghs4326.bin
+    curl -s -r 0-599999 https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/GHSL/GHS_POP_GLOBE_R2023A/GHS_POP_E2020_GLOBE_R2023A_54009_1000/V1-0/GHS_POP_E2020_GLOBE_R2023A_54009_1000_V1_0.zip > ghsmoll.bin
 
-None of this is measured. It follows from the stated CRS and grid extent of each
-product, and the difference between that and an inspection of the files is
-recorded in the last section.
+data.worldpop.org answers a range request with the whole 870 MB file, so the head
+of the stream is taken and the connection dropped instead:
+
+    curl -s https://data.worldpop.org/GIS/Population/Global_2000_2020/2020/0_Mosaicked/ppp_2020_1km_Aggregated.tif | head -c 120000 > wp.bin
+
+One reader serves all three. It follows the first image directory of a plain
+GeoTIFF or of the first deflated member of a zip, in classic or BigTIFF form, and
+prints the tags this section rests on:
+
+    python - ghs4326.bin <<'PY'
+    import struct, sys, zlib
+    b = open(sys.argv[1], 'rb').read()
+    if b[:4] == b'PK\x03\x04':
+        n1, e1 = struct.unpack('<HH', b[26:30])
+        b = zlib.decompressobj(-15).decompress(b[30 + n1 + e1:], 400000)
+    bo = '<' if b[:2] == b'II' else '>'
+    big = struct.unpack(bo + 'H', b[2:4])[0] == 43
+    ifd = struct.unpack(bo + ('Q' if big else 'I'), b[8:16] if big else b[4:8])[0]
+    step, pl = (20, 8) if big else (12, 4)
+    base = ifd + (8 if big else 2)
+    n = struct.unpack(bo + ('Q' if big else 'H'), b[ifd:base])[0]
+    size = {2: 1, 3: 2, 4: 4, 12: 8}
+    name = {256: 'width', 257: 'height', 258: 'bits', 339: 'sampleformat',
+            33550: 'pixelscale', 33922: 'tiepoint', 42112: 'metadata', 42113: 'nodata'}
+    for k in range(n):
+        e = b[base + k * step: base + (k + 1) * step]
+        tag, typ = struct.unpack(bo + 'HH', e[:4])
+        cnt = struct.unpack(bo + ('Q' if big else 'I'), e[4:4 + pl])[0]
+        if tag not in name:
+            continue
+        nb, p = cnt * size.get(typ, 1), e[4 + pl:4 + 2 * pl]
+        d = p[:nb] if nb <= pl else b[struct.unpack(bo + ('Q' if big else 'I'), p)[0]:][:nb]
+        v = (d.rstrip(b'\0').decode() if typ == 2 else
+             list(struct.unpack(bo + '%d%s' % (cnt, 'd' if typ == 12 else 'H'), d)))
+        print(name[tag], '=', v)
+    PY
+
+### What the two readable grids say
+
+GHS-POP R2023A in WGS84 at 30 arc-second, from `ghs4326.bin`:
+
+    width = [43202]
+    height = [21384]
+    bits = [64]
+    sampleformat = [3]
+    pixelscale = [0.00833333330032682, 0.008333333299795073, 0.0]
+    tiepoint = [0.0, 0.0, 0.0, -180.00791593130032, 89.0995831776456, 0.0]
+    metadata = <GDALMetadata>
+      <Item name="STATISTICS_MAXIMUM" sample="0">277608.74043128</Item>
+      <Item name="STATISTICS_MEAN" sample="0">8.4874269494672</Item>
+      <Item name="STATISTICS_MINIMUM" sample="0">0</Item>
+      <Item name="STATISTICS_STDDEV" sample="0">235.7608994699</Item>
+      <Item name="STATISTICS_VALID_PERCENT" sample="0">100</Item>
+    </GDALMetadata>
+
+There is no no-data tag in that file. The reader prints one when it is present
+and printed none, every cell is declared valid, and the smallest value is zero.
+So in this variant water and land where nobody lives are the same value, and
+nothing in the file distinguishes them.
+
+GHS-POP R2023A in Mollweide at 1 km, from `ghsmoll.bin`, is the same product with
+the opposite convention:
+
+    width = [36082]
+    height = [18000]
+    bits = [64]
+    sampleformat = [3]
+    pixelscale = [1000.0, 1000.0, 0.0]
+    tiepoint = [0.0, 0.0, 0.0, -18041000.0, 9000000.0, 0.0]
+    metadata = <GDALMetadata>
+      <Item name="STATISTICS_MAXIMUM" sample="0">338726.57110608</Item>
+      <Item name="STATISTICS_MEAN" sample="0">56.785121486231</Item>
+      <Item name="STATISTICS_MINIMUM" sample="0">0</Item>
+      <Item name="STATISTICS_STDDEV" sample="0">679.48856478339</Item>
+      <Item name="STATISTICS_VALID_PERCENT" sample="0">21.26</Item>
+    </GDALMetadata>
+    nodata = -200
+
+That is the finding this section exists for, and it is sharper than the one that
+was expected. The disagreement is not between two producers, it is between two
+distributions of one product. A consumer that hardcodes minus two hundred reads
+a real population as a sentinel in the WGS84 file, and one that hardcodes nothing
+adds minus two hundred per water cell in the Mollweide file, which moves the sum
+in the direction that hides people rather than inventing them.
+
+The Mollweide sentinel covers water and not only the corners outside the
+projection. The projection's own ellipse is
+
+    python -c "import math; a=2*6378137*math.sqrt(2); b=6378137*math.sqrt(2); print(math.pi*a*b/(36082000*18000000))"
+    0.7871082124602158
+
+so 78.71 per cent of that grid's bounding box is inside the projection while
+21.26 per cent of it carries a value. Dividing the second by the first leaves
+27.0 per cent of the projection interior holding data, which is near the land
+fraction of the Earth, so the sentinel covers the water as well as the corners.
+
+WorldPop's global mosaic for 2020, from `wp.bin`:
+
+    width = [43200]
+    height = [18720]
+    bits = [32]
+    sampleformat = [3]
+    pixelscale = [0.0083333333, 0.0083333333, 0.0]
+    tiepoint = [0.0, 0.0, 0.0, -180.001249265, 83.99958319871001, 0.0]
+    nodata = -3.4028234663852886e+38
+
+The sentinel is the most negative finite value a 32-bit float holds, which is the
+safest of the three conventions here because a consumer that forgets to mask
+produces a result nobody could mistake for a population.
+
+### The poles
+
+Neither readable grid reaches them, and this was assumed the other way before the
+files were opened. The corner and the cell count give the extent directly:
+
+    python -c "print(89.0995831776456 - 21384*0.008333333299795073)"
+    -89.10041610517223
+    python -c "print(83.99958319871001 - 18720*0.0083333333)"
+    -72.00041617728999
+
+GHS-POP in WGS84 runs from 89.0996 N to 89.1004 S, so about nine tenths of a
+degree at each end is outside the file. Its Mollweide distribution stops in the
+same latitude: the grid's north edge is 9,000,000 m while the projection's own
+north limit is 6378137 times the square root of two, which is 9,020,047.8 m, and
+inverting Mollweide at that edge gives 89.09 degrees.
+
+    python -c "import math; R=6378137.0; t=math.asin(9e6/(R*math.sqrt(2))); print(math.degrees(math.asin((2*t+math.sin(2*t))/math.pi)))"
+    89.09138295441029
+
+WorldPop is the one that matters for this tool. Its global mosaic covers 83.9996 N
+to 72.0004 S and no further. A reentry from a high-inclination orbit crosses both
+of those latitudes on every revolution, and a footprint that lands beyond them is
+not a footprint over empty ground, it is a footprint over cells that are not in
+the file. The two failures look identical in a sum and are not the same thing,
+which is the case the tool has to refuse rather than report as a small number.
+
+Nothing about the two unreadable grids is claimed here. LandScan Global states an
+extent of 90 N to 90 S [3], and that statement is not checked against the file.
+
+### The antimeridian
+
+The two readable grids sit differently against the line and neither sits on it.
+
+GHS-POP in WGS84 is 43,202 cells wide where 360 degrees is 43,200, and it starts
+west of the line:
+
+    python -c "print(-180.00791593130032 + 43202*0.00833333330032682, 43202*0.00833333330032682 - 360)"
+    180.008749309419 0.01666524071930553
+
+So it runs from 180.0079 W to 180.0087 E and overlaps itself by almost exactly
+two cells. Ground inside that overlap appears twice in the array, and a footprint
+crossing the line counts it twice unless the consumer knows.
+
+WorldPop leaves a gap in the same place instead:
+
+    python -c "print(-180.001249265 + 43200*0.0083333333, 0.001249265*111319.49)"
+    179.99874929500004 139.06754267485002
+
+Its array runs from 180.0012 W to 179.9987 E, so the strip between 179.9987 E and
+the line, about 139 m wide at the equator, is in no cell at all, and the strip of
+equal width at the western edge carries a longitude below minus 180 that a naive
+lookup either clamps or rejects.
+
+Both of these are small in area and neither is small in consequence, because the
+error they produce is silent. A footprint crossing the antimeridian is exactly
+the case a reentry produces on most orbits.
+
+The Mollweide grid has its break at the projection's outer boundary, which also
+falls on the antimeridian, and its measured extent is padded about 900 m beyond
+that boundary on each side rather than clipped to it.
+
+    python -c "import math; print(18041000 - 2*6378137*math.sqrt(2))"
+    904.3038527071476
+
+### What GPW v4.11 says about water
+
+GPW v4.11 does not encode water in the population grid at all. It ships a
+separate Water Mask product whose single band classifies each cell as "0: Total
+water pixels that are completely water and/or permanent ice", "1: Partial water
+pixels that also contain land", "2: Total land pixels" or "3: Ocean pixels" [5].
+Applying it is the consumer's job, which means a population sum over a coastal or
+oceanic footprint that skips the mask is wrong in a direction nobody notices.
+That is read from a catalogue description of the product and not from the file,
+for the reason in the last section.
 
 ## Whether any of them is data about identifiable people
 
@@ -180,26 +348,43 @@ The combination that survives both filters is a 1 km grid from GHS-POP or
 WorldPop, shipped for one named epoch, with the operator able to supply another.
 This document does not make that decision; it records what the options cost.
 
+Coverage is a third filter and it separates those two. The WorldPop global mosaic
+holds nothing north of 84 N or south of 72 S, and GHS-POP holds nothing beyond
+about 89.1 degrees in either direction, both measured above. Whichever is chosen,
+a footprint reaching past the edge of the grid is a case the tool has to name
+rather than a case where the population happens to be zero.
+
 ## What this survey did not establish
 
-The over-water behaviour of GHS-POP, LandScan Global and WorldPop, including the
-NoData value each uses. The GPWv4 water mask classes are cited from a catalogue
-description of that product rather than from reading the file.
+The water, pole and antimeridian behaviour of GPW v4.11 and of LandScan Global as
+their files hold it. Neither file can be fetched without an account, which is
+measured rather than described:
+
+    curl -sI "https://landscan.ornl.gov/system/files/LandScan%20Global%202022.zip" | grep -E "^HTTP|^Server"
+    HTTP/1.1 403 Forbidden
+    Server: AmazonS3
+
+    curl -sS -L https://sedac.ciesin.columbia.edu/downloads/data/gpw-v4/gpw-v4-population-count-rev11/gpw-v4-population-count-rev11_2020_30_sec_tif.zip
+    curl: (28) Failed to connect to sedac.ciesin.columbia.edu:443 after 21051 ms: Could not connect to server
+
+For those two the record above is what their pages say, and the pages do not
+state a no-data value. The GPWv4 water mask classes are cited from a catalogue
+description of that product rather than from reading the file, and LandScan
+Global's stated 90 N to 90 S extent is likewise its own claim about itself. The
+two grids that could be opened both turned out to differ from what their
+descriptions implied, so those two statements are the weakest lines in this
+document and should be treated that way until somebody with an account checks
+them.
 
 The licence of the LandScan Global data as distinct from the licence of the
 paper describing it. This is the exact conflation the issue warns against and the
 survey stops at recording it rather than guessing.
 
-Download sizes for GPW v4.11 and LandScan Global. Both are served through a
-session rather than a plain file URL, so no measurement was made.
+Download sizes for GPW v4.11 and LandScan Global, for the same reason as above.
 
-The pole and antimeridian behaviour above is derived from each product's stated
-coordinate reference system and grid extent, not from opening the files. A
-reprojection error or an off-by-one at the array edge would not be visible to
-this method, and finding one requires reading a grid, which needs tooling this
-repository does not have yet. That is the one clause of this issue's Done-when
-that is answered from documentation rather than from the data, and it is not
-claimed as more than that.
+Whether the no-data conventions measured here hold for the other epochs of the
+same products. One epoch of each was read, 2020 in both cases, and a producer
+that changed the convention between releases would not be visible to that.
 
 Candidate grids not covered: GRUMP, HYDE, and the constrained WorldPop products
 were not examined.
