@@ -409,13 +409,19 @@ No full text was read for references 1, 12, 13 and 15. They are cited from
 catalogue records and abstracts, and any claim resting on them is marked in the
 text where it is made.
 
-The README of this repository states that SCARAB 3.1L "is a decade old and its
-core routines go back twenty-five years". Nothing read for this survey gives a
-release date for 3.1L, so the first half of that sentence is unverified here.
-The second half is consistent with the 1995 development start [3]. The README
-also names STELA alongside PAMPERO as a CNES reentry tool; the CNES material
-read here names DEBRISK, PAMPERO and BLIZZARD as the reentry tool set [11], and
-STELA was not encountered in that role in any source read.
+The README of this repository carried two claims about other codes that this
+survey could not source, and both have since been repaired. It stated that
+SCARAB 3.1L "is a decade old and its core routines go back twenty-five years".
+Nothing read for this survey gives a release date for 3.1L, so the first half of
+that sentence was unverified here; the second half is consistent with the 1995
+development start [3]. It also named STELA alongside PAMPERO as a CNES reentry
+tool; the CNES material read here names DEBRISK, PAMPERO and BLIZZARD as the
+reentry tool set [11], and STELA was not encountered in that role in any source
+read. Issue #109 replaced both sentences with what this survey does establish
+and linked this document from the paragraph that held them, so a reader
+checking a sentence on the front page now reaches the reading behind it. The
+finding stays recorded here because it is the one place that says the front
+page was checked against this survey and what that check could not source.
 
 ## References
 
