@@ -138,12 +138,26 @@ a check.
 
 ## What would change this
 
-A check that reads a record and refuses one that is missing a field would move
-the shape rule from prose into enforcement. Today no check does. The command
-above is the whole mechanism, it is run by a person or not at all, and nothing
-in this repository refuses a record that skips a heading or a template that
-grows one this record does not. The gate that would carry such a rule is
-issue #35, and until it does, this section is the disclosure rather than a plan.
+A check that reads a record and refuses one that is missing a field moves the
+shape rule from prose into enforcement, and one does. The job `Enforce greppable
+invariants`, in `.github/workflows/invariants.yml`, runs the comparison above
+over every file matching `docs/decisions/NNNN-*.md` other than the template, on
+every push and every pull request, and refuses a record that is missing a
+heading the template declares.
+
+What it does not reach is the larger part of this record. It compares presence,
+so heading order is not checked and nothing written underneath a heading is
+checked, which is the same bound the command above carries. A decision written
+anywhere other than `docs/decisions/` is not its subject and is not read. A
+template that grows a heading the landed records do not carry is refused, but
+only by reddening every record at once rather than by naming the template as
+what changed. And a record whose required sections are all present and all empty
+of argument passes, which is the failure this format exists against and which
+review catches or nothing does.
+
+The gate carries this invariant and seven others that have no subject in the
+tree yet, and it prints which of the two any run covered. Issue #35 is where the
+rest of that list is held.
 
 If the numbering scheme collides in practice, because two branches plan two
 records with the same number, the authority moves from the issue's `Scope:` line
@@ -162,4 +176,7 @@ this record fixes their shape and not their content.
 
 The contributing document, which tells somebody where a decision goes.
 
-Anything that later reads a record mechanically, which nothing does today.
+Anything that reads a record mechanically. One thing does: the shape check named
+in `What would change this`, which reads the template's headings and every
+record's headings and nothing else. A change to the template's heading list is
+therefore a change to what that check requires of every record already landed.
