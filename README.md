@@ -6,4 +6,13 @@ Planning happens on the issue tracker first. Every decision that shapes
 the architecture is written down there with its reasons before the code
 that depends on it exists.
 
+Everything a calculation reads is a file on your machine, and everything it
+writes goes to a directory you name. The calculation makes no network request,
+and the tool sends no telemetry and no crash reports in any build, with no flag
+that turns either on. One separate command fetches the two reference files that
+come from elsewhere, and it sends the request and nothing else. None of that is
+refused by a check yet, because there is no source here for a check to read.
+[docs/data-handling.md](docs/data-handling.md) carries the full statement and
+says of each part whether it is enforced or a claim.
+
 See [NOTICE.md](NOTICE.md) for the intended-use notice.
