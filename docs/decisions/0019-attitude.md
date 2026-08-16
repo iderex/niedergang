@@ -16,8 +16,7 @@ boundary and leaves the treatment that stands in their place to this record.
 
 Three things had to be decided. Which treatment is the default. Whether an
 operator may override it, and at what granularity. And how large the error of
-the default is, in a form somebody can act on rather than a sentence saying it is
-a limitation.
+the default is, in a form somebody can act on.
 
 ## Options considered
 
@@ -31,10 +30,10 @@ component. Taken. It costs a field in the scenario and it costs the operator a
 judgement, and both costs are visible.
 
 A motion type per component chosen from a named set, which is what the reference
-codes do. ORSAT predefines motion rather than solving it and offers four motion
+codes do. ORSAT predefines motion and never solves it, and offers four motion
 types for a cylinder, and DRAPS extends that to 51 predefined motions over 15
 shapes [1, sections 2.1 and 3.1]. This is the richest option that stays inside a
-three degree of freedom model. It was dropped for now rather than rejected:
+three degree of freedom model. It was dropped for now and not rejected:
 nothing read for `docs/survey/existing-codes.md` gives the definition of any
 individual motion type, so adopting the idea would mean inventing the set and
 naming it after somebody else's.
@@ -52,13 +51,13 @@ reference area convention of issue #47 and this record does not restate it.
 
 A fixed attitude is selectable per component. It is never the default, and a
 component that selects one is flown at that attitude for the whole trajectory
-rather than for a phase of it.
+and not for a phase of it.
 
 The attitude is never propagated. Under either treatment a fragment carries no
 orientation history, so record 0005's field list stands and the body frame of
-record 0004 carries the average rather than an orientation.
+record 0004 carries the average.
 
-The default is visible as a default rather than as a value. Record 0010 already
+The default is visible as a default and not as a value. Record 0010 already
 requires that of any value with a defensible answer in the absence of an
 operator's opinion, and record 0008 requires the manifest to record the input
 after defaults were applied and to say which fields the tool supplied. The
@@ -68,7 +67,7 @@ for it.
 The selection is a per component scenario field, and record 0009's component
 list does not carry one. That list holds a shape, dimensions, a mass and a
 material. Adding a field changes what record 0009 decided, which record 0001
-makes a supersession rather than an edit, so the field arrives with whichever
+makes a supersession, so the field arrives with whichever
 record widens that list and not with this one. Issue #50 is where the widening is
 being collected, and the attitude selection joins the wall thickness, the
 quantity and the position already waiting there.
@@ -76,7 +75,7 @@ quantity and the position already waiting there.
 ## Reasons
 
 An override per component is the granularity every code read already uses. The
-object-oriented family assigns motion per component rather than per run: the
+object-oriented family assigns motion per component: the
 attitude equation "is not directly solved but predefined as specific motion
 according to object shapes" [1, section 2.1]. A single treatment for a whole
 scenario would be narrower than anything in the survey, and the field it saves is
@@ -89,7 +88,7 @@ attitude chosen as the default would be a stronger claim resting on less. Where
 neither is measured, the treatment that averages over the unknown is the one that
 does not have to name it.
 
-Keeping the average rather than an orientation is what keeps a fragment a scalar
+Keeping the average is what keeps a fragment a scalar
 in the artefacts. Record 0005 argues that case and this record does not reopen
 it.
 
@@ -121,7 +120,7 @@ about the coefficient at either attitude.
 
 The cost of the default is the spread between the tumbling average and the fixed
 extremes. Record 0007 already names that spread as the attitude uncertainty and
-says it is bounded by the shape rather than by a measurement. This is the number
+says the shape bounds it. This is the number
 behind that sentence.
 
 For a convex body the orientation-averaged projected area is a quarter of the
@@ -170,7 +169,7 @@ decision there is nothing to multiply the area factor by. So the figure this
 record hands to record 0007 is the area factor, marked as derived geometry rather
 than as a measurement, and the coefficient factor stays owed.
 
-Two measurements would change this record rather than extend it. A published
+Two measurements would change this record. A published
 drag or heating ratio between a tumbling and a held attitude for any shape in the
 set, which would replace the derived bound with a cited one. And a run of the
 same object both ways once there is something to run, which is the clause of
@@ -181,13 +180,13 @@ issue #56 no document can discharge.
 Issue #56, which owns this decision and keeps the clauses that need code.
 
 Record 0011, whose first boundary entry is the attitude one and whose heating
-cost this record cites rather than restates. A bound written into two files under
+cost this record cites and never restates. A bound written into two files under
 two owners moves in one of them.
 
 Record 0007, whose attitude entry names the spread this record puts a number on.
 
 Record 0005 and record 0004, which stay true only while the attitude is averaged
-rather than propagated.
+and not propagated.
 
 Record 0009 and issue #50, which is where the per component selection becomes a
 scenario field.

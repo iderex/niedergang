@@ -49,7 +49,7 @@ the boundaries, and a learning curve for a contributor. Taken below.
 
 A dimensional analysis library that generalises over all units. More general
 than this project needs, and the generality shows up as compile errors that are
-hard to read, which is a real cost when the reader is a physicist rather than a
+hard to read, which is a real cost when the reader is a physicist and no
 type theorist.
 
 On the internal time scale.
@@ -76,17 +76,17 @@ Conversion happens at the boundary and only there. An operator writes kilometres
 and degrees if they want to, the scenario reader converts once, and the artefact
 writer converts back. Nothing between those two points sees anything but SI.
 Which unit a scenario field is written in is part of the schema record 0009
-fixes, so the conversion is driven by a declared unit rather than by a
+fixes, so the conversion is driven by a declared unit and by no
 convention in a field name.
 
-The frames are named individually rather than as a family, and there are four
+The frames are named individually and not as a family, and there are four
 plus one.
 
 The inertial frame is the Geocentric Celestial Reference Frame, which is the
-frame the trajectory is integrated in. Naming a realisation rather than saying
-"an inertial frame" is the point: two codes that both say inertial can differ by
-the precession and nutation model between them, and that difference is a real
-ground track error over the minutes a reentry lasts.
+frame the trajectory is integrated in. Naming a realisation, where "an inertial
+frame" would have passed, is the point: two codes that both say inertial can
+differ by the precession and nutation model between them, and that difference is
+a real ground track error over the minutes a reentry lasts.
 
 The Earth-fixed rotating frame is the International Terrestrial Reference Frame,
 which is what a ground position is expressed in and what the Earth rotates into.
@@ -106,7 +106,7 @@ geometry is expressed in.
 The one that is not a coordinate frame is the body frame of a fragment, which
 exists so that a shape's reference area and its aerodynamic coefficients have a
 direction to be defined against. Where the attitude treatment is a tumbling
-average, this frame carries the average rather than an orientation history, per
+average, this frame carries the average, per
 record 0005.
 
 Altitude is the one that has to be stated at every boundary, because the models
@@ -128,7 +128,7 @@ thing that has to agree. Record for that agreement sits with issue #73.
 
 Where an operator supplies an altitude above mean sea level, the conversion to
 ellipsoidal height needs a geoid model, and that model is named in the scenario
-rather than assumed. An unnamed geoid is a refusal under issue #21.
+and never assumed. An unnamed geoid is a refusal under issue #21.
 
 Time. The internal scale is TAI, because a difference between two TAI instants
 is a duration and the integrator needs that to be true.
@@ -143,12 +143,12 @@ are read from an Earth orientation parameter file supplied the same way the
 space weather indices are, by a separate explicit command, never fetched on the
 calculation path, and recorded in the manifest by identity and version. A run
 whose epoch falls outside the range the file covers is refused, naming the file
-and the epoch, and never extrapolated. The reason is arithmetic rather than
-principle: the Earth turns roughly 460 metres per second at the equator, so an
-offset wrong by a second is a ground track wrong by a few hundred metres, and
-that is the same order as the accuracy the whole tool is trying to claim.
+and the epoch, and never extrapolated. The reason is arithmetic: the Earth turns
+roughly 460 metres per second at the equator, so an offset wrong by a second is
+a ground track wrong by a few hundred metres, and that is the same order as the
+accuracy the whole tool is trying to claim.
 
-The rule that makes this enforcement rather than intent. A quantity carries its
+The rule that makes this enforcement. A quantity carries its
 unit in its type and a vector carries its frame in its type. Adding a geodetic
 altitude to a geopotential one does not compile. Adding a position expressed in
 the inertial frame to one expressed in the Earth-fixed frame does not compile.
@@ -169,19 +169,18 @@ on its own.
 SI internally is not a preference, it is the only arrangement in which the type
 rule above is cheap. If two parts of the tool disagreed about which unit a
 quantity is in, the type would have to carry a scale as well as a dimension, and
-the conversion would be arithmetic rather than a boundary.
+the conversion would be arithmetic.
 
-Naming the frames individually rather than as a family is what makes a
-disagreement with another code investigable. Two results that differ, both
-computed in "an inertial frame", give a reader nowhere to start. Two results
-that differ, one in GCRF and one in something else, give them the first thing to
-check.
+Naming the frames individually, where a family name would have been shorter, is
+what makes a disagreement with another code investigable. Two results that
+differ, both computed in "an inertial frame", give a reader nowhere to start.
+Two results that differ, one in GCRF and one in something else, give them the
+first thing to check.
 
-Making altitude a per-boundary statement rather than a single global convention
-is the honest arrangement, because the disagreement is real. An atmosphere model
-and a population grid genuinely mean different things by altitude and by
-latitude, and a tool that pretended otherwise would be papering over the
-mismatch inside itself.
+Making altitude a per-boundary statement is the honest arrangement, because the
+disagreement is real. An atmosphere model and a population grid genuinely mean
+different things by altitude and by latitude, and a tool that pretended
+otherwise would be papering over the mismatch inside itself.
 
 TAI internally is decided by the integrator. A scale in which a difference is
 not a duration cannot be integrated over without special-casing the leap
@@ -198,7 +197,7 @@ code exists.
 The type rule costs readability at the boundaries, and the boundaries are where
 a physicist reading this code will start. A conversion that would be one
 multiplication becomes a named function and a wrapped type, and the first
-contributor from the field will experience that as ceremony rather than as
+contributor from the field will experience that as ceremony and not as
 safety.
 
 It also has a hole, and the hole is the interesting part. A type distinguishes a
@@ -208,11 +207,11 @@ nobody noticed it had a convention attached is exactly as unprotected as it woul
 be under a naming convention. The type rule catches the mistakes somebody
 anticipated, and the ones nobody anticipated are the ones that reach production.
 
-Reading Earth orientation parameters from a file rather than compiling in a leap
-second table means a fresh install cannot compute a trajectory until the operator
-has fetched something. That is a real obstacle at the worst moment, and the
-counter-argument, that a compiled table silently goes stale, is one an impatient
-user will not find persuasive.
+Reading Earth orientation parameters from a file, where a compiled-in leap
+second table was open, means a fresh install cannot compute a trajectory until
+the operator has fetched something. That is a real obstacle at the worst moment,
+and the counter-argument, that a compiled table silently goes stale, is one an
+impatient user will not find persuasive.
 
 Fixing four frames before any of them is used risks fixing the wrong four. A
 frame that turns out to be needed and is not here will be added, and the record
@@ -232,7 +231,7 @@ this record to a convention. That is checkable as soon as the workspace of issue
 
 An atmosphere or a data source whose altitude convention cannot be converted
 from geodetic height without a model this tool does not have. That would add a
-conversion with its own uncertainty rather than change the internal convention.
+conversion with its own uncertainty and would not change the internal convention.
 
 A precision requirement that makes the difference between two realisations of
 the inertial frame matter, which would move the record from naming a frame to

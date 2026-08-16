@@ -165,8 +165,7 @@ The same list, in shorter form and without the citations, is carried in
 `docs/model-boundary.md`, which is the operator-facing half of this decision.
 Two documents saying the same thing is a drift risk, and it is accepted here for
 one reason: an operator who reads only the short form has to see the boundary,
-and an operator who never opens `docs/decisions/` is the normal case rather than
-the exception. The short form points at this record as the authority.
+and an operator who never opens `docs/decisions/` is the normal case.
 
 ## Reasons
 

@@ -33,7 +33,7 @@ nobody kept. It costs the operator second, because a machine on an isolated
 network runs a different tool from a machine that is not.
 
 Fetch on demand with a cache and an offline flag. The same shape with the failure
-moved rather than removed. A cache is a fetch that already happened, so the first
+moved elsewhere. A cache is a fetch that already happened, so the first
 run on a new machine is still a network run, and a flag that turns the fetching
 off is a flag somebody has to know exists.
 
@@ -46,7 +46,7 @@ them.
 
 For telemetry, three positions. Collect nothing ever. Collect behind a build flag
 that ships off, which leaves a reader having to verify the absence in each build
-rather than once. Collect with an opt-out, which puts the work on the person the
+and not once. Collect with an opt-out, which puts the work on the person the
 rule exists to protect.
 
 For federation, meaning an exchange of scenarios, results or case data with
@@ -63,7 +63,7 @@ not for a schema, not for a version check.
 
 The tool sends no telemetry, no usage report and no crash report, in any build.
 There is no build flag, no environment variable and no configuration key that
-turns any of that on, so the absence is a property of the program rather than of
+turns any of that on, so the absence is a property of the program and not of
 how it was configured.
 
 Anything the tool fetches is fetched by a separate command that does nothing
@@ -79,12 +79,12 @@ refusal names the command that fetches it. Record 0006 fixes that for the
 indices and this record does not weaken it. A refusal is the behaviour, not a
 fetch and not a substituted default.
 
-Where personal data could enter is named rather than dismissed.
+Where personal data could enter is named.
 
 The population grids are aggregated counts per cell. The survey in
 `docs/survey/population-data.md` records, for each candidate, what its producer
 says its own inputs are, and none of them describes data about an identifiable
-person. That is a negative finding taken from the sources rather than an
+person. That is a negative finding taken from the sources, and no
 assessment of the censuses underneath them, and this record points at it instead
 of restating it.
 
@@ -95,7 +95,7 @@ nothing in the tool copies it anywhere the operator did not name.
 The output describes where people are. A footprint over inhabited ground is data
 about places built from data about places, and it still says which places have
 people under them. It is written to the run's output directory and to nowhere
-else, and it is treated with the care the second sentence earns rather than the
+else, and it is treated with the care the second sentence earns and not the
 care the first one would allow.
 
 Federation is deliberate, off by default, for a destination the operator names,
@@ -104,7 +104,7 @@ anything goes. It is never implicit in an update and never a side effect of a
 command whose name is about something else.
 
 Nothing in this repository refuses any of the above today, and that is the state
-of the rule rather than a note about it. The tracked tree holds no source for a
+of the rule. The tracked tree holds no source for a
 check to read:
 
     git ls-tree -r --name-only origin/main | grep -cE '\.rs$|Cargo\.toml|rust-toolchain'
@@ -118,7 +118,7 @@ carry, with what it waits on:
 
 Both at `e84095215431d40b9a7eff5932cf4ed6f71ff580`. Issue #35 is where the
 refusal is owed, and record 0013 is what makes it a reading of one directory
-rather than of the whole tree, since it places every call that could open a
+and not of the whole tree, since it places every call that could open a
 socket in `data`.
 
 ## Reasons
@@ -140,8 +140,8 @@ from a tool that reads a scenario naming an organisation carries that scenario's
 shape whether or not it carries its contents, and the operator who would most
 want a defect fixed is the one least able to authorise sending it.
 
-Naming the personal data question rather than answering it with a sentence about
-aggregation is the difference between a statement a reader can check and one they
+Naming the personal data question, where a sentence about aggregation would have
+closed it, is the difference between a statement a reader can check and one they
 have to accept. The grids are the easy part and the survey already carries the
 sources. The scenario file and the footprint are the parts that would be missed,
 and they are the ones an operator can act on.
@@ -156,10 +156,11 @@ The rule is prose. The section above says so with the commands, and a rule
 nothing refuses is a rule that survives exactly as long as everybody remembers
 it. The honest form of the objection is that this record is worth having only if
 #35 gets its invariant, and until then a reader who takes it as enforcement has
-been misled by its confidence rather than by its content.
+been misled by its confidence.
 
 The refusal costs an operator at the worst moment. Somebody selecting a model
-that needs indices for the first time meets a refusal instead of a result, and
+that needs indices for the first time meets a refusal where a result was wanted,
+and
 record 0006 already records that as the cost of its own position. Doing it again
 here compounds it: the same person also cannot be told about an updated file,
 because nothing checks for one.
@@ -172,8 +173,8 @@ formality.
 
 The federation position is a promise about work nobody has scoped. A design that
 does not exist cannot be held to a default, and writing the default down now may
-produce a record that the eventual design has to be argued around rather than
-one that shapes it.
+produce a record that the eventual design has to be argued around, and not one
+that shapes it.
 
 Naming the scenario file and the footprint as places personal data touches
 invites the reading that this tool processes personal data, which is a stronger
@@ -184,13 +185,13 @@ chosen against that reading and a reader in a hurry may still take it.
 
 The invariant landing in the gate. That is the condition under which this record
 stops being prose, and it is the only change that would alter what the record is
-worth rather than what it says. It is held by issue #35 and it needs source to
+worth. It is held by issue #35 and it needs source to
 read, which is issue #26.
 
 A legal obligation to report something outward. Nothing read for this record
-imposes one, and that is a negative finding about what was read rather than a
+imposes one, and that is a negative finding about what was read, and no
 survey of every jurisdiction an operator might sit in. An obligation of that kind
-would supersede this record rather than be handled as an exception inside it.
+would supersede this record.
 
 A measured cost to the separate fetch that outweighs what it buys. No number is
 quoted, because there is nothing to measure yet.

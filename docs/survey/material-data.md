@@ -68,8 +68,8 @@ data set at all, and at what cost.
 Can it ship. Whether the values may be copied into a file this project
 distributes. A permission to read, a public release approval, or an unlimited
 distribution statement on a report is not a permission to redistribute the
-content, and treating one as the other is the specific error this section exists
-against. The clearest case of it is below, in the TPRC entry.
+content, and the two are easy to confuse. The clearest case of the confusion is
+below, in the TPRC entry.
 
 ## The sources, and what each one permits
 

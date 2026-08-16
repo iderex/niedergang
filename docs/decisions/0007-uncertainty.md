@@ -38,13 +38,13 @@ number stream that then has to be controlled.
 Sample, with the analytic form available for a quick answer and labelled as such.
 Taken below.
 
-Worst case bounding rather than a distribution. Run the extremes and report the
+Worst case bounding, with no distribution. Run the extremes and report the
 envelope. Cheap, defensible, and it produces a number nobody can act on, because
 the envelope of a reentry footprint under pessimistic assumptions is most of a
 hemisphere.
 
 A single trajectory with a stated engineering margin. This is listed so that it
-is visibly rejected rather than silently absent. It is what a tool does when
+is visibly rejected. It is what a tool does when
 nobody decides, and it produces the confident wrong number this project exists
 to avoid.
 
@@ -63,34 +63,34 @@ depends on it.
 What is uncertain, and what distribution each one has. The list is the decision.
 Every entry is marked either measured, meaning the distribution comes from
 published data, or assumed, meaning somebody chose it. Today every entry is
-assumed, and that is the finding rather than a placeholder.
+assumed, and that is the finding.
 
 The entry state. Position and velocity at the interface altitude, from the
 operator's orbit and epoch. Assumed. The distribution is whatever the operator's
 own orbit determination gives, and where they supply none, a default spread over
 the along-track direction, which is the direction a decay epoch is least well
 known in. No source. This is the one entry where the operator is likely to have a
-real covariance, and the input format has to be able to accept one rather than
+real covariance, and the input format has to be able to accept one and not
 only a scalar spread.
 
 The atmosphere density. Assumed. Density is the single most influential input to
 a reentry trajectory and the models disagree with each other, which is a stated
-uncertainty rather than noise to be averaged away. The distribution used here is
+uncertainty. The distribution used here is
 a multiplicative factor on the density profile, drawn per sample and held for the
-whole trajectory rather than redrawn per step, because the model error is
+whole trajectory and never redrawn per step, because the model error is
 correlated in altitude and a per-step draw would average it away and understate
 the spread. The width of that factor is an assumption until issue #16 records
 what the model comparison actually shows.
 
 The drag coefficient. Assumed. Largest in the transitional regime, where the
 value comes from a bridging relation between the free molecular and continuum
-limits rather than from either limit, and the choice of bridging relation is
+limits, and from neither limit alone, and the choice of bridging relation is
 itself an uncertainty. Issue #55 chooses the relation against measurement and
 issue #52 fixes where the regime boundaries sit; until they do, the distribution
 here is a multiplicative factor with an assumed width.
 
 The heat transfer coefficient. Assumed, and treated as correlated with the drag
-coefficient rather than drawn independently, since both come from the same flow
+coefficient and never drawn independently, since both come from the same flow
 regime treatment and drawing them independently would produce samples where the
 aerodynamics and the heating disagree about what regime the fragment is in.
 
@@ -109,16 +109,16 @@ computes a breakup altitude per parent body from the altitude at which the
 radiative equilibrium surface temperature reaches the parent material's melting
 point, which makes low ballistic coefficient objects break up higher and dense
 ones lower [1, section 2.3]. That scheme gives this project a basis for a
-distribution rather than a point, and the distribution is still assumed until
+distribution, and the distribution is still assumed until
 somebody derives it. Issue #65 owns the convention.
 
 The attitude. Assumed. Where the treatment is a tumbling average, the
 uncertainty is the spread between the tumbling average and the fixed attitude
-extremes, which is bounded by the shape rather than by a measurement. Issue #56
+extremes, which the shape bounds. Issue #56
 owns the treatment and record 0011 records that six degree of freedom dynamics
 are outside the model boundary.
 
-The rule that makes the list above honest rather than decorative: every run
+The rule that makes the list above honest: every run
 states, in its own output, which of its distributions are assumptions. Not in the
 documentation, not in a footnote, in the artefacts a run writes. An uncertainty
 budget assembled from guesses is worth more than a single number, and it is worth
@@ -126,9 +126,9 @@ that only if it says what it is made of. The risk summary artefact of record
 0009 carries this and the validation standing of issue #81 is where its wording
 is fixed.
 
-The sample count is an input rather than a constant, it is recorded in the
+The sample count is an input, it is recorded in the
 manifest, and a run reports a convergence measure on the quantity that matters
-rather than only the count. A footprint from too few samples is wrong in a way
+and not only the count. A footprint from too few samples is wrong in a way
 that looks exactly like a footprint from enough of them.
 
 ## Reasons
@@ -148,8 +148,8 @@ propagation needs a covariance.
 Marking each distribution as measured or assumed, and printing that in the
 output, is the part of this record that will matter most in an argument. A
 distribution presented without provenance is read as a measurement, and the
-spread on this tool's first results will be almost entirely chosen rather than
-measured. Saying so in the artefact is the difference between an honest
+spread on this tool's first results will be almost entirely chosen and hardly at
+all measured. Saying so in the artefact is the difference between an honest
 uncertainty budget and a number with decorative error bars.
 
 Keeping the analytic form available and labelled is a concession to the case
@@ -167,7 +167,7 @@ in.
 
 Every distribution being an assumption today is a serious objection to the whole
 shape. A sampled answer whose inputs are all guessed has a spread that is a
-property of the guesses rather than of reality, and it can be tighter or wider
+property of the guesses and not of reality, and it can be tighter or wider
 than the truth by an unknown factor. Printing that it is assumed does not make
 the number better, it only makes it honest, and somebody will reasonably say that
 an honest wrong spread is still a wrong spread.
@@ -175,15 +175,14 @@ an honest wrong spread is still a wrong spread.
 Correlating the heat transfer coefficient with the drag coefficient is a
 modelling choice made here without a measurement behind it, and it narrows the
 spread relative to drawing them independently. That is a decision that makes the
-answer look better and it is recorded here rather than buried in the
-implementation.
+answer look better and it is recorded here.
 
-Holding the density factor fixed over a trajectory rather than redrawing it is
-the same kind of choice in the other direction: it widens the spread. Both are
+Holding the density factor fixed over a trajectory, where redrawing it was open,
+is the same kind of choice in the other direction: it widens the spread. Both are
 defensible and neither is measured.
 
 There is also a fair argument that the sample count belongs in this record as a
-number rather than as an input. Leaving it to the operator means most runs use
+number and not as an input. Leaving it to the operator means most runs use
 whatever the example used.
 
 ## What would change this
@@ -204,7 +203,7 @@ change that would most improve the honesty of the whole budget.
 A convergence measurement showing the sample count needed for a stable expected
 casualty number is far larger than a footprint run can afford. Nothing is
 measured. If it were true, the answer would be a variance reduction technique
-with its own record rather than a return to the analytic form.
+with its own record.
 
 ## What depends on this
 

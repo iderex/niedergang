@@ -15,7 +15,7 @@ a breakup event and are then flown independently, or does it represent the
 geometry in full and let breakup emerge from the failure of that model?
 
 The term object-oriented has a meaning in this field that is not the software
-one, so the question has to be asked in the field's words rather than in ours.
+one, so the question has to be asked in the field's words.
 
 ## Options considered
 
@@ -35,7 +35,7 @@ Its inputs are a component list an operator can assemble. It rests on a breakup
 assumption it cannot check: where the object comes apart is put in by hand, and
 several established tools do exactly that at a single altitude near 78 km [3].
 
-A spacecraft-oriented tool. It predicts breakup rather than assuming it, which
+A spacecraft-oriented tool. It predicts breakup and never assumes it, which
 is the one question the other class cannot ask. It costs a full geometry and a
 structural and thermal model of the real vehicle, an input almost no operator
 outside the manufacturer can supply, and computing that this project's kickoff
@@ -54,14 +54,14 @@ releases those components as fragments at a breakup event, and flies each
 fragment independently through its own aerodynamics, heating and demise.
 
 Breakup is an input assumption, not a prediction, and the tool says so in its
-output rather than in a footnote.
+output and not in a footnote.
 
 The seam. A higher fidelity mode is not promised and not designed here, but this
 decision must not make one a rewrite. Three interfaces are the seam, and the
 trajectory core may only reach them through their interface:
 
 The fragment source, which answers what fragments exist and when they are
-released. An implementation that predicts breakup instead of assuming it
+released. An implementation that predicts breakup, where this one assumes it,
 replaces this one.
 
 The aerodynamic coefficient source, which answers what the drag and lift
@@ -77,7 +77,7 @@ and is not settled by this record. What is settled here is that these three
 boundaries exist and that nothing else in the tool reaches across them.
 
 The questions this tool refuses to answer, as a direct consequence, and it
-refuses them rather than answering them badly:
+refuses them, because answering them badly is the worse outcome:
 
 Whether, when and at what altitude a given spacecraft breaks up. The tool is
 told this; it does not compute it.
@@ -97,7 +97,7 @@ the thermal model of the day carries. This record does not fix that model.
 ## Reasons
 
 The kickoff constrains this to one machine, and the risk number is a
-distribution rather than a point, so the tool has to run a scenario many times.
+distribution over many runs, so the tool has to run a scenario many times.
 That is affordable in the first class and not in the second.
 
 The input exists. A component list with masses, materials and rough shapes is
@@ -112,7 +112,7 @@ not.
 
 The tools prescribed for first stage assessment are of this class [1], so a
 comparison against them is like for like, and a disagreement points at physics
-rather than at method.
+and not at method.
 
 ## Reasons against
 
@@ -131,8 +131,7 @@ survival in a direction this record cannot bound.
 The class is old. It is the class the current agency tools are in, and part of
 the argument for building this project at all is that those tools are dated. A
 new implementation of the same class inherits the same blind spots, and the
-answer to that is the seam above rather than a claim that the blind spots are
-small.
+answer to that is the seam above.
 
 ## What would change this
 
@@ -140,13 +139,13 @@ A published case where an object-oriented prediction and a spacecraft-oriented
 prediction disagree materially, against ground truth that settles it. That would
 move the seam from a hedge to a plan.
 
-A cheap breakup criterion that is validated rather than assumed. If one appears,
+A cheap breakup criterion that is validated and not assumed. If one appears,
 the fragment source interface is where it enters, and this record is superseded
-rather than stretched.
+and never stretched.
 
 Evidence that fragment sheltering changes surviving mass by more than the spread
 this tool already reports. That would make the refusals above too expensive to
-keep, and the tool would have to say less rather than model more.
+keep, and the tool would have to say less.
 
 ## What depends on this
 
@@ -156,7 +155,7 @@ Everything in the aerodynamics, heating and demise milestones, because each of
 them is written against a fragment that flies alone.
 
 The breakup event and its default altitude, which is issue #65, and which this
-record makes a convention rather than a computation.
+record makes a convention.
 
 The validation tiers in `docs/validation/reachable-cases.md`, whose tier 1 cases
 are two rocket stages, exactly the shape this class handles best. That is a

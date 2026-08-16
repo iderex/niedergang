@@ -20,7 +20,7 @@ for, the altitude and temperature range where the flux is significant, the
 published estimates of its effect on demise altitude for a representative
 component, and whether those estimates agree. Two of those four are answerable
 from the published record and two are not, and which is which is the useful part
-of this record rather than a gap in it.
+of this record.
 
 Record 0011 already places this effect outside the model boundary and says of it
 that the error from leaving it out is not established, that no number was found,
@@ -28,7 +28,7 @@ and that the direction is the only thing that can be stated. That record's `What
 would change this` names a sensitivity run over the oxidation efficiency
 parameter of a code that has one as the measurement that would move it. This
 record is the attempt to find that measurement, and it reports what the attempt
-produced rather than what it was looking for.
+produced and not what it was looking for.
 
 ## Options considered
 
@@ -57,10 +57,10 @@ The metallurgy of the two Delta II tanks points at molten aluminium deposited on
 a steel or titanium surface, oxidising, having its oxide layer stripped by the
 shear of the flow, and burning. Modelling that needs material from one component
 to arrive on another, which record 0003 excludes by flying every fragment alone.
-It is a change of architecture rather than a surface term, and it is weighed here
+It is a change of architecture, and it is weighed here
 only so that a later reader does not mistake the option taken for a fix to it.
 
-Out silently. Listed so that it is visibly rejected rather than absent. The
+Out silently. Listed so that the rejection is visible. The
 effect is the entry where this tool departs furthest from the reference codes,
 and an operator who does not know that cannot judge the number.
 
@@ -104,7 +104,7 @@ The same paper reconstructs where that happened:
 
 The temperature line ends with a degree sign and a C in the source. The
 metallurgy is of AISI 410 stainless steel and Ti-6Al-4V, and the aluminium was
-deposited on them rather than being what they were made of.
+deposited on them and was not what they were made of.
 
 **The altitude and temperature range where the flux is significant.** Not
 answered, and the question as issue #63 poses it does not have an answer in the
@@ -129,7 +129,7 @@ and the stainless steel propellant tank was not:
     pdftotext orsat1997.pdf - | grep -o 'An oxidation heating factor of only 0.4 could be used before the cylinder survived.'
     An oxidation heating factor of only 0.4 could be used before the cylinder survived.
 
-That sentence is terse and the reading taken here is stated rather than assumed:
+That sentence is terse and the reading taken here is stated:
 0.4 is the largest factor at which that analysis still produced survival, and
 above it the code demised a tank that was recovered on the ground near
 Georgetown, Texas. The reading is supported by the same paper concluding that
@@ -145,7 +145,7 @@ parameter with an outcome flip inside its range, and its value for a given alloy
 is not measured anywhere this record found.
 
 **Whether the published treatments agree.** They do not, and the disagreement is
-about whether to have the term at all rather than about its size. ORSAT carries
+about whether to have the term at all, and not about its size. ORSAT carries
 it and exposes the efficiency as a parameter an analyst varies. Its smaller
 sibling drops it deliberately:
 
@@ -184,7 +184,7 @@ quoted above. A tool whose output is a casualty expectation is the wrong place t
 carry an error whose sign is the other way.
 
 The magnitude is not known, and the measurement that exists argues against
-shipping a value rather than for one. A parameter whose range contains an outcome
+shipping a value and never for one. A parameter whose range contains an outcome
 flip for a real component is a parameter that decides the answer. Choosing a
 number inside it and calling the result physics would produce exactly the
 plausible number from an unsupported input that record 0010 exists against.
@@ -192,7 +192,7 @@ plausible number from an unsupported input that record 0010 exists against.
 The interface consequence is cheap now and expensive later, so it is taken now. A
 heat balance written as a sum of surface sources absorbs an oxidation term as one
 more entry. A heat balance written as a convective term minus a radiative term
-has to be reopened, and it will be reopened by whoever adds the term rather than
+has to be reopened, and it will be reopened by whoever adds the term and not
 by whoever wrote it.
 
 Two of the four things issue #63 asked for are not in the published record, and
@@ -205,7 +205,7 @@ next reader would have quoted them.
 This is the entry where the tool departs furthest from the codes it will be
 compared against, and record 0011 already says so. ORSAT has carried an oxidation
 term since at least 1997. A reviewer who knows the field will read its absence as
-the tool being less complete rather than more honest, and on this point they have
+the tool being less complete, and on this point they have
 a case.
 
 Conservative in the risk direction is not conservative in every direction. An
@@ -217,7 +217,7 @@ too low, and it should not be read as safe in general.
 
 The quantification rests on one sentence in one 1997 conference paper about one
 component, read from a scanned copy whose text layer renders one word of a
-neighbouring sentence as `tern` rather than `term`. That is a thin base for the
+neighbouring sentence as `tern` where `term` belongs. That is a thin base for the
 central claim of this record, and the claim is stated no more strongly than the
 base supports.
 
@@ -243,11 +243,11 @@ because the literature question is the same question whenever it is asked.
 A published sensitivity run over an oxidation efficiency parameter reporting a
 demise altitude difference for a stated component. Record 0011 named this as the
 measurement that would put a number on its oxidation entry, and this record
-looked for it and did not find it. Finding one supersedes this record rather than
-extending it, because the decision here rests on the magnitude being unknown.
+looked for it and did not find it. Finding one supersedes this record and does
+not extend it, because the decision here rests on the magnitude being unknown.
 
 A measurement of the exothermic contribution for a named alloy from a plasma or
-high enthalpy facility, which is a bound on the physics rather than on a code's
+high enthalpy facility, which bounds the physics well away from a code's
 tuning parameter and is the thing that would let a term be shipped with a value
 somebody can check.
 
