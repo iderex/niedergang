@@ -26,8 +26,8 @@ On the order of the decision.
 Choose the model first and let the interface follow from what that model
 happens to return. This is what a tool does when nobody decides, and it costs
 the property that matters most here: if the interface is the shape of one
-model's output, running a second model over the same case is a port rather than
-a configuration change, and the comparison that would give the answer an honest
+model's output, running a second model over the same case is a port and no
+configuration change, and the comparison that would give the answer an honest
 error bar never gets made.
 
 Fix the interface first and the model second. Taken below.
@@ -35,14 +35,14 @@ Fix the interface first and the model second. Taken below.
 On the default model.
 
 NRLMSIS 2.x. The current model of the family every reentry tool uses, and the
-one an analyst would name without thinking. It is ruled out as a shipped
-default by its licence, which is an academic research agreement rather than an
-open one: the grant is for academic, non-commercial purposes, and it withholds
-the right to modify the software, to disseminate it for commercial purposes, or
-to copy it beyond personal, archival and non-commercial academic use without
-written consent [1]. A tool that ships it makes every operator's use a question
-for somebody's legal department, and this project's stated requirement is a
-default whose licence permits redistribution.
+one an analyst would name without thinking. It is ruled out as a shipped default
+by its licence, which is an academic research agreement: the grant is for
+academic, non-commercial purposes, and it withholds the right to modify the
+software, to disseminate it for commercial purposes, or to copy it beyond
+personal, archival and non-commercial academic use without written consent [1].
+A tool that ships it makes every operator's use a question for somebody's legal
+department, and this project's stated requirement is a default whose licence
+permits redistribution.
 
 NRLMSISE-00 through the widely used C port. Older, well characterised, and the
 version the reference reentry codes moved to [2, section 2.5]. The package
@@ -84,7 +84,7 @@ atmosphere produced a result, and with the altitude range over which it claims
 validity.
 
 The tool can run the same case against two atmospheres and report what changed.
-This is a requirement on the interface rather than a feature, because the
+This is a requirement on the interface, because the
 difference between two models over one case is one of the few honest error bars
 available on the answer, and record 0007 names the atmosphere as the uncertainty
 it is most waiting on.
@@ -94,7 +94,7 @@ The default model shipped inside the artefact is the U.S. Standard Atmosphere
 States government, in the public domain, with distribution unrestricted, and it
 covers 0 to 1000 km [4].
 
-That is a weak default and the record says so rather than presenting it as a
+That is a weak default and the record says so, and does not present it as a
 choice on the physics. A static atmosphere has no solar or geomagnetic
 dependence, so two reentries at opposite ends of a solar cycle are the same
 reentry to it. Every artefact produced with it is labelled with the model
@@ -104,9 +104,9 @@ computed against a static atmosphere is not a result to plan against.
 A thermospheric model is selected by the operator and supplied by the operator,
 and the interface above is what it is supplied through. Two are named as the
 ones worth supporting first, NRLMSISE-00 and NRLMSIS 2.x, and neither ships. The
-reason is recorded above and it is a licence reason rather than a technical one.
+reason is recorded above and it is a licence reason.
 If a redistributable model of that class is confirmed, it becomes the default
-and this record is superseded rather than quietly amended.
+and this record is superseded, and the superseding is written down.
 
 The space weather input is F10.7 for the day, the 81-day average of F10.7, and
 the geomagnetic Ap index [3]. The source is the CelesTrak space weather file,
@@ -114,7 +114,7 @@ which carries all three in one record along with Kp, and which states its own
 upstream sources as GFZ Potsdam for the geomagnetic data, the Canadian Space
 Weather Forecast Centre for F10.7, SIDC for sunspot number, and NOAA SWPC and
 NASA for the short and long term predictions [5]. No terms of use were stated on
-the page read, and that absence is recorded rather than read as permission.
+the page read, and that absence is recorded, and nobody reads it as permission.
 
 Fetching that file is a separate explicit command. It is never done during a
 calculation, never on a first run, and never as a side effect of a command whose
@@ -132,10 +132,9 @@ the mechanism by which a confident wrong number is produced, and this is the
 place it would most easily happen, because an operator who has never fetched an
 index file has no reason to know one exists.
 
-Outside a model's stated validity range the answer is a refusal rather than an
+Outside a model's stated validity range the answer is a refusal and no
 extrapolation. The range is part of what the interface returns, so this is
-checked against the model's own claim rather than against a constant written
-here.
+checked against the model's own claim.
 
 ## Reasons
 
@@ -143,18 +142,17 @@ Fixing the interface before the model is the whole of this record's value. Every
 atmosphere in this class returns roughly the same quantities, so the interface is
 not hard to design; what is hard is retrofitting one after a model's output shape
 has spread through the trajectory core. Doing it first is cheap now and expensive
-later, and the comparison it makes possible is a real error bar rather than a
-feature nobody uses.
+later, and the comparison it makes possible is a real error bar.
 
 The licence finding decided the default and it was not the expected answer. The
 model an analyst would name is not one this project can ship, and the honest
-consequence is a default that is weak on the physics rather than a default whose
-licence is glossed over. Labelling every output produced with it, and saying in
-the validation standing what it means, is what stops that weakness from being
-invisible.
+consequence is a default that is weak on the physics, where the alternative was
+a default whose licence is glossed over. Labelling every output produced with
+it, and saying in the validation standing what it means, is what stops that
+weakness from being invisible.
 
-Refusing rather than falling back follows from where this project thinks wrong
-numbers come from. The failure is not a tool that stops, it is a tool that
+Refusing, where falling back was open, follows from where this project thinks
+wrong numbers come from. The failure is not a tool that stops, it is a tool that
 answers using something the operator did not choose. Indices are the clearest
 case of that in the whole design.
 
@@ -177,7 +175,7 @@ The licence position on NRLMSISE-00 may be too cautious. The absence of a grant
 in the documentation read is not the same as a prohibition, and a package that
 has been redistributed widely for two decades may well carry terms that were not
 found here. That is a question for somebody who can read the actual licence file
-rather than a decision, and treating it as settled would be the same mistake in
+and no decision, and treating it as settled would be the same mistake in
 the other direction.
 
 Requiring an operator to fetch indices before a realistic run adds a step at
@@ -199,7 +197,7 @@ checked here.
 
 A measurement of how far two atmosphere models actually diverge over a
 representative reentry. Nothing is measured, and the claim that they disagree is
-carried from the issue rather than from a run. As soon as the interface exists
+carried from the issue and from no run. As soon as the interface exists
 the measurement is one command, and record 0007 is waiting on the number to turn
 the density uncertainty from an assumption into something with a source.
 
@@ -207,7 +205,7 @@ A validity range that turns out to be stated differently by a model than by its
 documentation, which would move the refusal boundary.
 
 An operator environment where the separate fetch is impossible, which would make
-the index file an input the operator supplies by hand rather than one the tool
+the index file an input the operator supplies by hand and not one the tool
 retrieves. The interface already permits that and the record would not need to
 change, but the documentation would.
 
@@ -224,11 +222,11 @@ Record 0009, which carries the atmosphere and space weather selection in the
 scenario and the model identity in the artefacts.
 
 Issue #21, the refusal rule, which owns the position that a missing index is a
-refusal rather than a substitution.
+refusal.
 
 Issue #24, which owns the statement that the calculation path makes no network
 request, and issue #35, the invariants gate, which is where that becomes
-enforcement rather than prose.
+enforcement and stops being prose.
 
 Issue #30, the separated suites, which is where the fetch is tested.
 

@@ -22,12 +22,12 @@ rotating frame terms are larger than most of the harmonics and are the ones that
 get dropped by accident. That reasoning is right and its conclusion moves, because
 record 0004 has since fixed the frame the equations are integrated in, and in
 that frame there are no rotating frame terms to drop. Where the rotation does
-enter is answered below rather than left to be rediscovered.
+enter is answered below, so nobody has to rediscover it.
 
 What is not decided here is the altitude a run may start at. Issue #41 asks this
 record to name the altitude above which the truncation stops being defensible.
 Naming it needs the measurement this record does not have, so what is written
-below is a ceiling and a refusal rather than a number.
+below is a ceiling and a refusal.
 
 ## Options considered
 
@@ -52,12 +52,11 @@ manifest to record its identity and version, record 0009 requires it in the
 scenario or in the packaging, issue #89 requires an attribution entry with its
 terms, and issue #93 requires it to be present on a clean machine with no
 network. A field bought that way is bought at the price of a provenance surface,
-and the argument for paying it has to be an integrated error rather than a
-preference for completeness.
+and the argument for paying it has to be an integrated error.
 
 Normal gravity from the WGS 84 ellipsoid, the Somigliana formula. Weighed and
 dropped in a sentence: it is a closed form for gravity on the surface of the
-ellipsoid rather than a field to integrate through, and the physical content it
+ellipsoid, which is not a field to integrate through, and the physical content it
 carries above the central term is the same second degree zonal term the option
 above names directly.
 
@@ -78,7 +77,7 @@ changed in one place and stay stale in another.
 The input is Table 3.2 of NGA.STND.0036_1.0.0_WGS84, "Department of Defense
 World Geodetic System 1984", version 1.0.0, 2014-07-08, which gives the EGM2008
 dynamic value as -4.84165143790815e-04, and the relation is equation (3-1) of
-the same document. The dynamic coefficient is the one taken rather than the
+the same document. The dynamic coefficient is the one taken, and not the
 geometric one implied by the ellipsoid, because what is being integrated is the
 Earth's field and not the reference surface. The semi-major axis, the flattening
 factor, the geocentric gravitational constant and the nominal mean angular
@@ -126,7 +125,7 @@ implementation and a scenario field, not a change to the integrator.
 The equations of motion carry no centrifugal term and no Coriolis term. Record
 0004 integrates the trajectory in the Geocentric Celestial Reference Frame, and
 those terms exist only in equations written in the rotating frame. This is stated
-so that adding one reads as the error it would be rather than as a correction
+so that adding one reads as the error it would be, and never as a correction
 somebody remembered.
 
 The Earth's rotation enters in two other places and neither is gravity. The
@@ -136,29 +135,29 @@ atmosphere co-rotates with the Earth, so the velocity the drag is computed
 against is the velocity relative to that co-rotating air, and dropping the
 difference is the mistake issue #41 was pointing at. Its size is on the last
 three lines printed above. For an equatorial track at that radius, computing the
-drag against an inertial velocity rather than a relative one changes it by a
-factor of 0.8827 where the air overtakes the fragment and 1.1247 where it opposes
-it, and the departures of those factors from one are 75.0 and 79.7 times the J2
-scale on the first line. That term belongs to issues #43 and #52 rather than to
-this record. It is named here because it is the larger one, it is not a gravity
-term, and this record is where a reader would otherwise go looking for it.
+drag against an inertial velocity, where a relative one belongs, changes it by a
+factor of 0.8827 where the air overtakes the fragment and 1.1247 where it
+opposes it, and the departures of those factors from one are 75.0 and 79.7 times
+the J2 scale on the first line. That term belongs to issues #43 and #52. It is
+named here because it is the larger one, it is not a gravity term, and this
+record is where a reader would otherwise go looking for it.
 
 Third body attraction from the Sun and the Moon, and solar radiation pressure,
-are excluded. The exclusion is stated rather than quantified. No magnitude for
+are excluded. The exclusion is stated and it is not quantified. No magnitude for
 either was computed for this record, and issue #45 is where an unquantified
 exclusion becomes a measured one.
 
 The truncation error is not measured. What is fixed here instead is the shape of
-the measurement, so that it is produced once rather than argued about after it
-exists. It is a comparison of two runs of the same case that differ only in the
-field: the field decided here against a field of a stated higher degree and
-order, with the entry state, the seed, the atmosphere, the space weather input
-and the fragment set held identical. The quantities reported are the along-track
-and cross-track separation of the impact point in metres and the difference in
-demise altitude in metres, per fragment rather than aggregated, on a case from
-the regression set of issue #45. Until that comparison exists, a run states that
-the gravity truncation error is unmeasured. That sentence is a disclosure. It is
-not restated later as a bound.
+the measurement, so that it is produced once and the argument after it exists
+has something fixed to meet. It is a comparison of two runs of the same case
+that differ only in the field: the field decided here against a field of a
+stated higher degree and order, with the entry state, the seed, the atmosphere,
+the space weather input and the fragment set held identical. The quantities
+reported are the along-track and cross-track separation of the impact point in
+metres and the difference in demise altitude in metres, per fragment and never
+aggregated, on a case from the regression set of issue #45. Until that
+comparison exists, a run states that the gravity truncation error is unmeasured.
+That sentence is a disclosure. It is not restated later as a bound.
 
 A scenario whose start altitude is above the atmospheric interface is a
 pre-flight refusal under record 0010, naming the start altitude, the interface
@@ -169,27 +168,28 @@ operator may supply is decided, and this record does not decide it.
 
 ## Reasons
 
-J2 is kept rather than dropped because it is not small where it acts. Its scale
+J2 is kept because it is not small where it acts. Its scale
 against the central term at the interface is 1.5645e-03, and the entry phase is
 the part of the flight where the drag that dominates everything later is still
 negligible, so the perturbation acts almost unopposed for the part of the
 trajectory that decides where the rest of it goes.
 
-Nothing beyond J2 is kept because the next term costs a category rather than a
-line. The measured ratio above puts the largest degree 2 non-zonal coefficient
-two hundred times below the zonal one, and a field bought from a published model
-arrives as a data set with an identity, a version, a licence, an attribution
-entry and a file that has to exist on a machine with no network. Paying that for
-an unmeasured gain is the shape of decision this project exists to avoid, and it
-is cheap to reverse once the measurement exists.
+Nothing beyond J2 is kept because the next term costs a category of work, where
+J2 cost a line. The measured ratio above puts the largest degree 2 non-zonal
+coefficient two hundred times below the zonal one, and a field bought from a
+published model arrives as a data set with an identity, a version, a licence, an
+attribution entry and a file that has to exist on a machine with no network.
+Paying that for an unmeasured gain is the shape of decision this project exists
+to avoid, and it is cheap to reverse once the measurement exists.
 
-Deriving the coefficient rather than writing it down is the same argument as
-record 0012's single module for elementary functions. A physical constant that
-appears as a literal is a value that can be changed in one place and stay stale
-in another, which is one of the invariants issue #35 already carries.
+Deriving the coefficient, where writing it down would be shorter, is the same
+argument as record 0012's single module for elementary functions. A physical
+constant that appears as a literal is a value that can be changed in one place
+and stay stale in another, which is one of the invariants issue #35 already
+carries.
 
-Stating what is absent from the equations of motion, rather than only what is
-present, is what makes this record readable by somebody checking an
+Stating what is absent from the equations of motion alongside what is present
+is what makes this record readable by somebody checking an
 implementation against it. A record that lists the terms it includes cannot be
 used to find a term that should not be there.
 
@@ -218,10 +218,10 @@ matters, because an exclusion nobody quantified is indistinguishable from one
 nobody thought about.
 
 Refusing a start above the interface is a real obstacle for the operator most
-likely to want this tool, who has an orbit rather than an entry state. It is
+likely to want this tool, who arrives with an orbit. It is
 chosen over a warning because a warning on the calculation path is read once and
 then not read, but it does mean the first thing some operators meet is a refusal
-rather than an answer.
+where they expected an answer.
 
 Fixing the coefficient to the EGM2008 dynamic value ties one number in this tool
 to one gravitational model, in a record that otherwise argues the model does not
@@ -240,13 +240,13 @@ argument here is about a flight of a few minutes and it does not survive an arc
 of hours without being remeasured.
 
 A validation case under issue #78 or #79 whose disagreement lies along the track
-rather than across it, which is the direction a field truncation would move an
+and not across it, which is the direction a field truncation would move an
 impact point.
 
 A population grid decided under issue #73 whose resolution makes a sub-kilometre
 track error the difference between two cells with different densities, which
-would raise the accuracy this record has to hold rather than change the physics
-in it.
+would raise the accuracy this record has to hold and leave the physics in it
+alone.
 
 ## What depends on this
 
@@ -268,7 +268,7 @@ needs.
 Record 0010, whose list of refusable inputs gains the start altitude above the
 interface. That record states that an absent input on neither of its lists is a
 defect report against it, so the list growing here is the mechanism working
-rather than an exception to it.
+and no exception to it.
 
 Record 0008, whose manifest carries the degree and order used and the derived
 coefficient, so that a run computed against this field is distinguishable from

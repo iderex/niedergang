@@ -19,7 +19,7 @@ number it reports when it can do both, and what it requires before it will
 produce a sheltered figure at all.
 
 What is not decided here is a penetration criterion or a building stock data
-set. Neither is chosen, and the record says why rather than choosing one badly.
+set. Neither is chosen, and the record says why, and chooses neither badly.
 
 ## Options considered
 
@@ -79,7 +79,7 @@ basis, and both are printed with the sheltered figure. A sheltered number whose
 criterion and data set are not visible next to it is not one this tool emits.
 
 The absence of either, when a sheltered figure is asked for, is a pre-flight
-refusal under record 0010 rather than a default. It is knowable from the
+refusal under record 0010. It is knowable from the
 scenario and the data sets before anything is flown, which is where record 0010
 puts the line. Asking for sheltering and receiving the unsheltered number with a
 warning is exactly the substitution record 0010 refuses, so the run stops
@@ -87,7 +87,7 @@ instead.
 
 Neither input ships. This tool carries no penetration criterion and no structure
 data today, so the switch exists and refuses everything until something is put
-behind it. That is the state this record describes rather than a gap in it: the
+behind it. That is the state this record describes: the
 alternative was a criterion nobody sourced, applied to data nobody has, lowering
 every number in the output.
 
@@ -100,10 +100,10 @@ inputs it needs are named, and nothing is computed from data that does not
 exist.
 
 What the tool says about itself. A run that produced only the unsheltered number
-says so in the output rather than leaving the reader to infer it from a missing
+says so in the output and leaves the reader nothing to infer from a missing
 field, because a number with no label reads as the complete answer. The wording
 belongs with issue #81, which owns the standing the tool prints, and this record
-requires that it says the sheltering credit was not applied rather than being
+requires that it says the sheltering credit was not applied, and does not stay
 silent.
 
 ## Reasons
@@ -126,12 +126,12 @@ at a resolution a footprint could use is thinner still. A model that looks
 precise on top of that produces a number whose apparent precision is entirely in
 the arithmetic.
 
-Refusing rather than defaulting follows from the rest of the tree. Record 0010
+Refusing, where defaulting was open, follows from the rest of the tree. Record 0010
 makes a missing input a refusal, and a sheltering switch that quietly returned
 the unsheltered number when its data was missing would be a default wearing the
 name of an option.
 
-The switch is defined now rather than later because the shape of the output is
+The switch is defined now because the shape of the output is
 what the switch changes. A sheltered figure that arrives after the risk summary
 schema exists arrives as a second number nobody planned a place for, and the
 first thing somebody does with an unplanned second number is put it where the
@@ -169,14 +169,15 @@ suggests, the argument above is weaker than it reads.
 A published penetration criterion with test data behind it, readable and
 citable, that says for a fragment of a given mass, shape and energy what a
 named roof construction stops. That is the input this record says does not
-exist, and finding it changes what the switch can carry rather than the default.
+exist, and finding it changes what the switch can carry and leaves the default
+alone.
 
 An openly licensed building stock data set with stated coverage and a reference
 year, at a resolution a footprint crosses. Together with the criterion above, it
-would make the sheltered figure something the tool could ship rather than only
+would make the sheltered figure something the tool could ship and not only
 accept.
 
-A standard that requires a sheltering model rather than declining to apply one.
+A standard that requires a sheltering model and does not allow declining one.
 `docs/survey/standards.md` records that the ESA requirements have the Earth
 population model declared as an assumption without fixing one, and that ISO
 24113 and ESSB-ST-U-004 were not read. Any of the three could carry something
@@ -197,7 +198,7 @@ which are the quantities a sheltering credit would modify and which this record
 leaves unmodified.
 
 Issue #73, the population exposure, whose grid identity, projection and
-reference year the structure data set would sit alongside rather than inside.
+reference year the structure data set would sit alongside and never inside.
 
 Record 0009, whose risk summary is where a second number and its labels would
 have to fit, and whose schema under `schema/` decides whether a sheltered figure

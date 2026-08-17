@@ -11,7 +11,7 @@ accepted
 ## Question
 
 What does one material in the library have to carry, so that a wrong number or
-a missing one is visible in the output rather than absorbed into it, and what
+a missing one shows in the output, and what
 does the loader do with a material that does not carry it.
 
 The question is asked before any of the models that read a material, because
@@ -42,7 +42,7 @@ say what it is worth, which is the field record 0007 depends on.
 Constants with one citation per material. Better, and it fails for the reason
 the issue that plans this record names. A material assembled from four sources
 carries one citation, so a disagreement with another code is traceable to a
-material rather than to a number, and tracing it to a number is the whole
+material and never to a number, and tracing it to a number is the whole
 reason to record provenance at all.
 
 A general schema with arbitrary named properties and free-form metadata. It
@@ -66,15 +66,16 @@ below.
 The material library is a file the tool reads, in TOML, with a schema version
 as its first key. Record 0009 decided that format and that rule for the
 scenario, for a parser that cannot be talked into constructing something and
-for a version that is read rather than guessed. The material library is the
+for a version that is read off the file. The material library is the
 second untrusted input this tool has and it takes the same answer for the same
 reasons, which are not restated here.
 
 The library holds one record per material. A material is named, and a component
-in a scenario references it by that name rather than copying its values, which
+in a scenario references it by that name and copies no values, which
 is what record 0005 requires of a fragment.
 
-A property is an entry rather than a number. Every entry carries five things,
+A property is an entry with fields, and a bare number is not one. Every entry
+carries five things,
 and a missing one is a missing property.
 
 The value, which is either a constant or a curve over temperature. Both are
@@ -101,7 +102,7 @@ four of them.
 
 The required properties are density, specific heat capacity, thermal
 conductivity, melting temperature, heat of fusion and emissivity. The list is
-this tree's rather than the general literature's, and the survey derives it
+this tree's own, and the survey derives it
 from what the models read:
 
     git grep -n '^## What the demise model reads' origin/main -- docs/survey/material-data.md
@@ -110,7 +111,7 @@ from what the models read:
 Three of them carry a field that a bare number cannot hold.
 
 Melting temperature names which temperature it is. An alloy melts over a range
-rather than at a point, so the entry says whether the value is a solidus, a
+and not at a point, so the entry says whether the value is a solidus, a
 liquidus or a nominal figure, and a source that does not say is recorded as not
 saying.
 
@@ -126,7 +127,7 @@ review is for.
 Each material also carries the terms it is in the file under. The survey found
 no openly redistributable source carrying this property set for any alloy class
 this tool needs, so the licence position is the constraint that decides whether
-a row exists rather than a footnote on one. What those terms may be for a row
+a row exists at all. What those terms may be for a row
 this project ships is issue #49. This record fixes only that the field is
 required and that a row without it is not loadable.
 
@@ -160,14 +161,14 @@ the artefacts carry the refused count. The value is not extrapolated. An
 extrapolated specific heat capacity produces a demise altitude that reads
 exactly like an earned one.
 
-An operator may supply a library of their own instead of or alongside anything
+An operator may supply a library of their own, alone or alongside anything
 this project ships. The manifest records which library a run read and at which
 version, which is the property record 0005 asks for when it makes a fragment
-hold a reference rather than a copy.
+hold a reference.
 
 No path root is fixed here. The `Scope:` line of issue #48 names
 `data/materials/` and record 0013 fixes six crate names and no directory, which
-is an open question on issue #26 rather than something this record settles in
+is an open question on issue #26, and this record settles nothing about it in
 passing.
 
 ## Reasons
@@ -175,8 +176,8 @@ passing.
 The demise answer is a property lookup with physics wrapped around it, and the
 physics is checkable in a way the lookup is not. A reader can follow the heat
 balance in a document and cannot tell, from any output this tool produces, that
-the emissivity underneath it was a handbook value for a polished coupon rather
-than a measurement of an oxidised surface. Putting provenance next to the value
+the emissivity underneath it was a handbook value for a polished coupon and no
+measurement of an oxidised surface. Putting provenance next to the value
 is what makes that visible without reading the source.
 
 Provenance per value follows from what disagreement between two codes looks
@@ -189,8 +190,8 @@ record lists the material properties among the uncertain inputs, marks them
 assumed, and says the distribution comes from here. Leaving the field out would
 leave a landed record pointing at a schema that cannot answer it.
 
-Refusing rather than extrapolating follows the rule this project has already
-taken twice. Record 0010 makes a missing input a refusal and never a default,
+Refusing follows the rule this project has already taken twice. Record 0010
+makes a missing input a refusal and never a default,
 and a value evaluated outside its stated range is a missing input wearing the
 last number that was in range.
 
@@ -221,14 +222,14 @@ flag that permits extrapolation will come from exactly that direction.
 The required set is a metals set. A composite does not melt in the way a
 melting temperature and a heat of fusion assume, and a composite row that
 satisfies this schema carries a melting temperature with no physical referent.
-That is a real defect rather than a hypothetical one; the survey records a
+That is a real defect; the survey records a
 published study doing it. The schema will accept such a row and nothing here
 catches it.
 
 Provenance per value is a heavy cost on the one person the library depends on.
 Entering a material from a handbook becomes six citations with page numbers
-rather than one, and the person who would otherwise build the first library is
-the person that cost falls on.
+where one would have done, and the person who would otherwise build the first
+library is the person that cost falls on.
 
 An uncertainty field that may say the source gives none will be read as an
 optional field. It is not, and the distinction between a stated absence and an
@@ -245,14 +246,14 @@ position, and it was not read:
 
 If that agreement, or the terms of MatWeb, TPSX or the ESA Space Materials
 Database, turns out to permit redistribution, the cost of this schema is paid
-once against real data rather than argued about against an empty directory.
+once against real data, and the argument against an empty directory ends.
 
 A composite treatment. The survey records that ORSAT 7.1 added a pyrolysis
 model for fibre reinforced plastics and that SCARAB 4 added a demise and
 ablation model covering six material types. A pyrolysing material needs
 properties this required set does not name, and giving it a melting temperature
-to satisfy the loader is the failure named above. That is a supersession rather
-than a field added to this record.
+to satisfy the loader is the failure named above. That is a supersession of this
+record.
 
 A demise criterion that keeps melted material on the body. Record 0011 assumes
 it leaves immediately, and issue #62 is where the criterion is decided. If it
@@ -261,8 +262,8 @@ not read and the required set grows.
 
 A thermal model that resolves temperature through the thickness. The conduction
 mode behind the interface of issue #60 reads thermal conductivity as a curve
-rather than as a value at one temperature, and if it turns out to need more
-than that, the entry shape rather than the property list is what moves.
+across temperature, and if it turns out to need more
+than that, the entry shape is what moves and the property list stays.
 
 A measurement showing that the material property uncertainties dominate the
 width of a footprint. Today the uncertainty field is a record-keeping field,
@@ -290,10 +291,10 @@ Record 0010, whose pre-flight refusal list names a material property that a
 model reads, and whose in-flight case now has a second member in the
 out-of-range evaluation above.
 
-Record 0005, whose fragment holds a reference into this library rather than a
+Record 0005, whose fragment holds a reference into this library and no
 copy of it, and whose Refused terminal state the out-of-range case ends in.
 
 Issue #19, the manifest, which records the library and the version a run read.
 
 Issue #86, whose fuzz targets name the material file among the untrusted
-inputs, and which now has a schema to malform rather than a shape to guess.
+inputs, and which now has a schema to malform.

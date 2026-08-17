@@ -36,8 +36,7 @@ is that nothing in the artefact says which answer it is.
 Substitute a default and print a warning. Better, and it fails for a reason that
 has nothing to do with the physics. A warning is a line on a terminal that
 belongs to the person who ran the tool, and the artefact travels without it. The
-number reaches a reader who never saw the warning, which is the normal case
-rather than the exception.
+number reaches a reader who never saw the warning, and that is the normal case.
 
 Substitute a default and mark the affected outputs. This is the honest form of
 the option above and it is genuinely defensible. It costs a marking that has to
@@ -47,8 +46,8 @@ aggregation is worse than no marking at all because it looks complete.
 
 Refuse, with no defaults anywhere. Strongest and simplest to reason about. It
 costs usability in the places where a default is genuinely correct and where
-refusing would make an operator invent a value, which is the mechanism by which
-a made-up number enters the run through the front door instead of the back.
+refusing would make an operator invent a value, which is how a made-up number
+enters the run through the front door.
 
 Refuse a missing input, permit a named default only where a default is a real
 answer, and make a default visible as a default wherever it is used. Taken
@@ -73,7 +72,7 @@ refusal arrived first reports a different fragment on a different machine from
 the same seed, which is the determinism property removed by the error path.
 
 Fly every sample to its end, mark the fragments that could not be flown, report
-them in an order derived from the run rather than from the schedule, and withhold
+them in an order the run fixes, which the schedule cannot move, and withhold
 every aggregate that a marked fragment would have entered. Taken below.
 
 ## Decision
@@ -100,7 +99,7 @@ An in-flight refusal is one that only becomes knowable while a fragment is being
 flown. The fragment ends in the Refused terminal state that record 0005 names,
 and the run does not abort. Every sample is flown to its end, the refused
 fragments are reported in an order derived from the sample index and the fragment
-identity rather than from the order they were reached, the run writes its
+identity, which the order they were reached in cannot move, the run writes its
 artefacts with the refused count in them, and it exits non-zero.
 
 The reason the run does not abort mid-flight is record 0008. One seed reproduces
@@ -108,15 +107,14 @@ one run exactly whatever the thread count and whatever order the samples finish
 in, and an abort at the first refusal reached makes the reported fragment a
 function of the scheduler. An error path that is not deterministic is a hole in
 the property exactly where a reader is most likely to look. Flying every sample
-also gives the operator every fragment that could not be flown in one pass
-instead of one per run, which is the same argument the pre-flight case makes.
+also gives the operator every fragment that could not be flown in one pass,
+which is the same argument the pre-flight case makes.
 
 Record 0005 says of a missing material property that "the run stops or the
 fragment is reported as refused". This record is where that choice is made, and
-the answer is that it depends on when the absence is knowable rather than on
-what is absent. A material property named in the scenario is knowable before
-flight and stops the run. A regime a trajectory turns out to enter is not, and it
-marks the fragment.
+the deciding question is when the absence becomes knowable. A material property
+named in the scenario is knowable before flight and stops the run. A regime a
+trajectory turns out to enter is not, and it marks the fragment.
 
 The inputs whose absence is a refusal. Each entry says where the obligation
 comes from.
@@ -129,16 +127,16 @@ not reopen it.
 A material property that a model reads. Melting point, heat of fusion, specific
 heat, thermal conductivity and emissivity are read by the thermal model and the
 demise criterion, and a component whose material lacks one of them is refused by
-name. Record 0005 requires a fragment to reference the library rather than copy
-it, and record 0007 states that a missing property is a refusal and never a
+name. Record 0005 requires a fragment to reference the library,
+and record 0007 states that a missing property is a refusal and never a
 sampled guess.
 
 A material the library does not contain at all. The refusal names the component
 and the material string as it was written in the scenario.
 
 A shape outside the fixed set. Record 0005 requires one primitive from the set
-that issue #46 fixes, and states that a shape outside it is a refusal rather than
-a nearest match.
+that issue #46 fixes, and states that a shape outside it is a refusal, with no
+nearest match offered.
 
 The space weather indices, where the selected atmosphere model needs them.
 Record 0006 fixes this, with no fallback, no substitution and no flag that turns
@@ -146,8 +144,8 @@ it into a warning, and requires the refusal to name the model, the index, the
 epoch it was needed for and the fetch command.
 
 A query outside an atmosphere model's stated validity range. Record 0006 fixes
-that the answer is a refusal rather than an extrapolation, checked against the
-range the model itself returns. This one is in-flight: whether a trajectory
+that the answer is a refusal, checked against the range the model itself
+returns. This one is in-flight: whether a trajectory
 leaves the range is not knowable from the scenario.
 
 An aerodynamic coefficient absent for a shape in a regime the trajectory enters.
@@ -155,21 +153,20 @@ In-flight, for the same reason.
 
 A data set that a manifest identifies and the repeating machine does not have,
 in the mode that reproduces a run from a manifest. Record 0008 fixes this as a
-refusal rather than a substitution.
+refusal.
 
 The population data set and its reference year, when a risk number is asked for.
 The number has no meaning without them and they are not defaultable, because
 choosing a grid on the operator's behalf is a licensing decision as well as a
 numerical one. Entry 5 of issue #1 is where the shipped grid is decided, and
-whichever way it is answered, an absent grid is a refusal rather than a
-substitution.
+whichever way it is answered, an absent grid is a refusal.
 
 Where an input is absent, is not on the list above, and is not a default named
 below, that is an oversight and a defect report against this record. The list is
-the decision rather than a summary of one, in the same sense record 0011's list
+the decision itself, in the same sense record 0011's list
 is the model boundary.
 
-What is a default rather than a refusal, and how a default is visible.
+What is a default, and how a default is visible.
 
 The seed. A run with no seed draws one at start and records it in the manifest.
 The property record 0008 promises is that a recorded seed reproduces a run, and
@@ -195,7 +192,7 @@ is never the default.
 
 A risk number without the population data set and the reference year it was
 computed against. Record 0009 puts the population basis in the risk summary and
-this record makes its absence a refusal to emit rather than an omission.
+this record makes its absence a refusal to emit.
 
 An artefact without the identity of the models that produced it. Record 0006
 requires every artefact produced against the static default atmosphere to carry
@@ -210,7 +207,7 @@ refused fragments appears; the aggregate does not.
 A compliance statement. Issue #21 states this and entry 9 of issue #1 is where
 the project's position on the thresholds is decided. Until it is answered the
 tool says nothing about them, and if the answer permits a comparison, this record
-is superseded rather than quietly widened.
+is superseded, and the superseding is written down where a reader meets it.
 
 A distribution rounded into a reassuring sentence. The tool emits the
 distribution. What a report says about it is issue #95 and entry 10 of issue #1,
@@ -221,7 +218,7 @@ and neither of them may reach back into what the tool itself prints.
 The failure this project has to avoid is a plausible number produced from an
 input that did not support it, and every option except refusal leaves that number
 reachable. The marking option is the only serious competitor and it fails on
-reach rather than on principle: a mark has to survive every aggregation between
+reach, and its principle is sound: a mark has to survive every aggregation between
 the missing property and the risk figure, and the aggregations are exactly where
 this tool does the work a reader cannot check by inspection.
 
@@ -235,8 +232,8 @@ runs this tool. An operator assembling a component list of any size will have
 several materials missing at once, and a tool that reveals them one run at a time
 teaches them to stop reading the messages.
 
-Withholding the aggregate rather than computing it over what survived is the
-same argument as the refusal itself, one level up. A footprint over the fragments
+Withholding the aggregate is the same argument as the refusal itself, one level
+up. A footprint over the fragments
 that could be flown is a real number with a real meaning, and the meaning is not
 the one a reader will take from it.
 
@@ -250,12 +247,12 @@ guessed. A tool that refuses is a tool that is not used, and a tool that is not
 used protects nobody.
 
 The counter is that the failure mode this record is against was measured on other
-people's outputs rather than imagined, and that a guess made outside the tool is
+people's outputs, and that a guess made outside the tool is
 at least a guess somebody knows they made. That counter is an argument and not a
 measurement, and it is written here as an argument.
 
-The second is the boundary between pre-flight and in-flight. It is a boundary of
-implementation rather than of physics, and it can move: a check that is in-flight
+The second is the boundary between pre-flight and in-flight. It is a line the
+implementation draws, and it can move: a check that is in-flight
 today because nothing computes the regimes a trajectory will enter becomes
 pre-flight the day something does. So an operator cannot predict from this record
 alone whether a given defect stops the run or marks a fragment, which is a real
@@ -264,7 +261,7 @@ cost in a rule whose whole point is predictability.
 The third is that flying every sample after a refusal spends the full cost of a
 run that will not produce a risk number. On a large sampling job that is a lot of
 work for an answer that is already known to be incomplete, and the argument for
-it is determinism rather than efficiency.
+it is determinism.
 
 The fourth is that the list of refusals is a list, and lists in documents go
 stale. This one names the record or the issue behind each entry so that a reader
@@ -280,24 +277,23 @@ wrongly.
 ## What would change this
 
 An answer to entry 9 of issue #1 permitting the tool to print the comparison
-against a threshold, which would supersede the never-emit half of this record
-rather than amend it.
+against a threshold, which would supersede the never-emit half of this record.
 
 An answer to entry 4 of issue #1 on material data, if it introduces a class of
-property that is genuinely defaultable with a stated uncertainty rather than
-absent. That would move an entry from the refusal list to the default list, which
-is a change to this record and not an implementation detail.
+property that is genuinely defaultable with a stated uncertainty. That would
+move an entry from the refusal list to the default list, which is a change to
+this record and not an implementation detail.
 
 A measurement showing that the pre-flight check set cannot be separated from the
 calculation without duplicating it. Nothing has been measured, because nothing is
 implemented. The measurement is possible as soon as issue #26 exists, and if the
 duplication were large the answer would be a narrower pre-flight set with the
-remainder in-flight, which weakens the reporting promise rather than the refusal
-rule.
+remainder in-flight, which weakens the reporting promise and leaves the refusal
+rule standing.
 
 Evidence from use that refusing a run costs more safety than it buys, which is
 the argument in the first paragraph of the reasons against. It would arrive as a
-report of somebody working around the tool rather than as a number, and it would
+report of somebody working around the tool, which is prose, and it would
 be worth a record even so.
 
 ## What depends on this

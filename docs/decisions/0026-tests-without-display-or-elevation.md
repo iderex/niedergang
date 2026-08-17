@@ -14,7 +14,7 @@ What may a test in the default suite depend on, and what happens to a test that
 needs more than that.
 
 The question is asked before there is a suite because the answer is a birth
-requirement rather than a cleanup. A suite acquires its dependencies one test at
+requirement. A suite acquires its dependencies one test at
 a time, each one defensible on the day it lands, and the point at which the
 whole is no longer runnable is not a point anybody decides.
 
@@ -28,7 +28,7 @@ check that holds it lives.
 No rule, with each test judged on its merits when it is written. This is the
 state a project is in unless it says otherwise, and it is not neutral. Every
 individual dependency arrives with a reason, and the suite stops being runnable
-by accumulation rather than by decision.
+by accumulation, and no decision was taken.
 
 A rule written down and left to review. Cheap, and it holds exactly as long as
 whoever reviews remembers to look. The failure is silent in both directions: a
@@ -36,10 +36,10 @@ test that reaches the network passes on a machine that has one, and the reviewer
 who would have caught it sees a green run.
 
 A rule with a mechanism on the test side, so that a default-suite test which
-binds off loopback or opens a connection is refused rather than trusted not to.
+binds off loopback or opens a connection is refused and never trusted not to.
 This costs an interception surface that has to exist in the language and a
 fixture that proves the guard bites. Taken below, with the mechanism owed to
-issue #29 rather than delivered here.
+issue #29.
 
 An environment-level rule instead, with the default suite run inside a sandbox
 that has no network and no display. Attractive because it needs no cooperation
@@ -68,7 +68,7 @@ A test in the default suite runs without a display, without a privileged
 account, without the network, and without anything on the machine that the
 repository did not put there.
 
-Concretely, and the list is the decision rather than a summary of one, in the
+Concretely, and the list is the decision itself, in the
 same sense record 0010's refusal list is:
 
 A default-suite test opens no window. Anything that draws renders to a file and
@@ -112,7 +112,7 @@ What a run says about itself is the other half of the rule and it is not
 optional. A run that covered less than everything may not read as one that
 covered everything and found nothing, so the default run names every suite,
 says whether it ran, and says what running the others would cost. Where that is
-enforced is issue #29 rather than here; this record is where the obligation is
+enforced is issue #29 and not here; this record is where the obligation is
 stated.
 
 The mechanism for the loopback and network clauses is a guard on the test side,
@@ -120,9 +120,8 @@ because the property has to hold where a contributor runs the suite and not only
 on the gate. What such a guard can intercept in Rust is not settled here and no
 design is asserted: record 0002 fixes the language, and what the test harness
 and the socket API make interceptable is a question for whoever writes issue
-#29. It is stated as an obligation with a named owner rather than as a solved
-problem, and until a fixture reddens on a test that binds off loopback, the
-clause is read by a person.
+#29. It is stated as an obligation with a named owner, and until a fixture
+reddens on a test that binds off loopback, the clause is read by a person.
 
 ## Reasons
 
@@ -138,13 +137,13 @@ can answer, and a test that wants a certificate in a trust store raises a
 consent prompt. Both interrupt whoever is sitting at that machine, and the
 person interrupted is usually not the person who ran the suite.
 
-The rule is stated as what the default suite may not need rather than as what it
+The rule is stated as what the default suite may not need and not as what it
 may, because the second form is a list that has to be extended every time a
 legitimate dependency appears, and a list that has to be extended is one that
 gets extended without argument.
 
-Naming the separated suites for what they need rather than calling them
-integration is the same reasoning one level up. A reader of a green default run
+Naming the separated suites for what they need, where calling them integration
+was open, is the same reasoning one level up. A reader of a green default run
 can tell what was not covered only if the uncovered thing has a name that says
 what it is.
 
@@ -158,13 +157,13 @@ tracked fixture tests the tool and the network test tests somebody else's
 server, and only the first belongs on a gate, but that answer is an argument and
 it is worth knowing it is one.
 
-The second is that the guard is owed rather than delivered. A rule whose
+The second is that the guard is owed. A rule whose
 mechanism is another issue is a rule that holds by memory in the window between
 the two, and this project's own position is that a sentence in a document is an
 explanation of a rule and not a rule. That window is real and it is open now.
 
 The third is the loopback exception. It is a judgement about where a boundary
-sits rather than a property, and a test that binds loopback and then talks to
+sits, and a test that binds loopback and then talks to
 something that is not the tool would satisfy the clause while defeating it. No
 mechanism distinguishes the two, and none is proposed.
 
@@ -176,13 +175,12 @@ is smaller than it sounds.
 ## What would change this
 
 A test that genuinely cannot be written under this rule and whose absence costs
-more than the rule protects. It would arrive as a specific test rather than as
-an argument, and the answer might be a fourth separated suite rather than a
-change here.
+more than the rule protects. It would arrive as a specific test, and the answer
+might be a fourth separated suite, leaving this record unchanged.
 
 A measurement showing that the default suite has become slow enough that a
 contributor stops running it locally, which would move the boundary between the
-default suite and the long-running suite of issue #30 rather than remove it.
+default suite and the long-running suite of issue #30 and would not remove it.
 Nothing has been measured, because there is no suite:
 
     git ls-tree -r --name-only origin/main | grep -c -E 'Cargo\.toml|\.rs$|rust-toolchain'
@@ -191,10 +189,10 @@ Nothing has been measured, because there is no suite:
 run at `39ed198ce3278045bff1d9fc4a0752d7b5435af9`.
 
 A finding from issue #29 that the test-side guard this record asks for cannot be
-built in Rust in a form that refuses rather than reports. That would not change
-the rule, and it would change what this record may claim about it: the clause
-would be marked as read by a person, with the reason, rather than left reading
-as enforced.
+built in Rust in a form that refuses, leaving one that only reports. That would
+not change the rule, and it would change what this record may claim about it:
+the clause would be marked as read by a person, with the reason, and would stop
+reading as enforced.
 
 An instrument entering this project's path, which would give the empty hardware
 category a member and require the documentation to say what the default gate
@@ -203,7 +201,7 @@ does not cover.
 ## What depends on this
 
 Issue #29, the test gate, which owns both the check that runs this suite and the
-guard that makes this record enforcement rather than an intention, and which
+guard that makes this record enforcement, and which
 also owns the run's statement of which suites ran and which did not.
 
 Issue #30, the separated suites, which is where every test excluded here goes

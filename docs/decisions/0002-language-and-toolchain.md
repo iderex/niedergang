@@ -20,19 +20,19 @@ operator with no administrator rights on their own workstation has to be able to
 run the result.
 
 What this record does not answer is what agreement across machines means. That
-is issue #25, and the choice made here constrains it rather than settling it.
+is issue #25, and the choice made here constrains it and settles nothing.
 
 ## Options considered
 
 C++. The language most of the reference literature is written in, the deepest
 numerical ecosystem of any candidate, and the one where an aerothermodynamicist
 is most likely to be able to read the source. It costs the two properties this
-project needs most. Reproducibility is a per-build-system discipline rather than
-a language property: the standard says nothing about which libm the transcendental
+project needs most. Reproducibility is a per-build-system discipline and no
+language property: the standard says nothing about which libm the transcendental
 functions come from, optimisation flags routinely relax floating point without
 saying so, and a dependency set is whatever the machine happened to have unless a
 great deal of work is done to make it otherwise. And the test story is a choice
-between frameworks rather than a runner that is simply there, which matters
+between frameworks, where a runner that is simply there would do, which matters
 because every guard in this tree has to be provable by running something.
 
 Fortran. Still the language of the reentry codes this project is measured
@@ -40,7 +40,7 @@ against, and genuinely good at the arithmetic. It costs a modern dependency and
 build story, a test runner, and any realistic path to a single artefact with a
 command line an operator drives. The tool it would produce would be a numerical
 core with the surrounding apparatus written in something else anyway, which is
-two languages rather than one.
+two languages.
 
 Python. The largest pool of contributors in the intended field, the best
 interactive story, and by far the fastest route to a first result. It costs the
@@ -81,7 +81,7 @@ The tool is written in Rust.
 
 The toolchain version is pinned in the tree, not in a document and not in a
 contributor's environment. Two files carry it. A `rust-toolchain.toml` at the
-workspace root names an exact version rather than a channel, so that `cargo
+workspace root names an exact version, so that `cargo
 build` in a fresh clone selects that version and no other. A committed
 `Cargo.lock` fixes every dependency to an exact version and hash.
 
@@ -91,7 +91,7 @@ taken against:
     rustc --version
     rustc 1.97.0 (2d8144b78 2026-07-07)
 
-That number is the floor rather than a target. Raising it is a change to the
+That number is the floor. Raising it is a change to the
 pin, made deliberately, with a reason, and it is what issue #31 exists to catch
 when it happens by accident.
 
@@ -102,8 +102,8 @@ relaxation is used anywhere. Every arithmetic operation the tool performs on
 contraction is out of scope for this tree. Within one platform and one build of
 one commit, the same input produces the same bits.
 
-Across platforms it does not promise bits, and the reason is named rather than
-left as a hedge. The elementary functions, meaning the sine, the exponential and
+Across platforms it does not promise bits, and the reason is named. The
+elementary functions, meaning the sine, the exponential and
 the logarithm that every atmosphere model and every frame transform calls, come
 from the platform's own library and are not specified to the last bit by any
 standard the platform follows. Two correctly working machines can differ in the
@@ -117,7 +117,7 @@ about that one, and the options it inherits are a stated tolerance or a vendored
 correctly-rounded implementation, not a promise.
 
 On parallelism, the threading model is chosen to fit the determinism property
-already fixed by record 0008 rather than the other way round. Samples are
+already fixed by record 0008 and never the other way round. Samples are
 independent and each draws from a stream derived from the seed and the sample
 index, so work may be stolen, reordered and distributed across any number of
 threads without moving the answer. Thread count is a performance knob and never
@@ -136,22 +136,21 @@ Rust and Go either hands them a runtime problem or hands them a two-language
 build. A tool that a safety engineer cannot run on the workstation they have is
 not independent of the agencies whatever its licence says.
 
-The second reason is that the pin is a file rather than a practice. The property
+The second reason is that the pin is a file. The property
 this project needs is that a fresh clone builds the same thing, and in Rust that
 is `rust-toolchain.toml` plus `Cargo.lock` sitting in the tree where a reviewer
 can see them and a diff shows them moving. In C++ the same property is a build
 system, a container, or a lockfile from a package manager that has to be chosen
 and then maintained, and the version that actually built a release is
-reconstructed rather than read.
+reconstructed and cannot be read.
 
 The third is that the guard rule and the type system meet. Every rule in this
-project is supposed to be refused by a machine rather than described in a
-document, and the largest single class of defect a physics tool has, which is
-mixing a geodetic altitude with a geopotential one or a body frame vector with
-an inertial one, can be made a compile error in Rust at a cost the language is
-built to carry. Issue #14 is where that is designed. In Go it would be a
-convention plus a linter, and in Python and Fortran it would be a runtime check
-at best.
+project is supposed to be refused by a machine, and the largest single class of
+defect a physics tool has, which is mixing a geodetic altitude with a
+geopotential one or a body frame vector with an inertial one, can be made a
+compile error in Rust at a cost the language is built to carry. Issue #14 is
+where that is designed. In Go it would be a convention plus a linter, and in
+Python and Fortran it would be a runtime check at best.
 
 Against the field argument specifically: the pool of people who can extend a
 reentry code is small in every language, and the ones who could improve the
@@ -167,19 +166,19 @@ The numerical ecosystem is the real cost and it is not small. Adaptive
 Runge-Kutta integration with dense output, geodesy, and the interpolation an
 atmosphere table needs are all available in C++ and are excellent in Julia. In
 Rust some of that will be written here and, more expensively, validated here.
-Every routine written rather than taken is a routine this project owns for its
-lifetime, and the honest version of the estimate is that the integrator and the
-frame transforms will be ours.
+Every routine written here, where one could have been taken, is a routine this
+project owns for its lifetime, and the honest version of the estimate is that
+the integrator and the frame transforms will be ours.
 
 The contributor pool is the second cost and it argues against this record more
 than anything else does. The people best placed to correct the physics in this
 tool write Fortran and Python. Handing them a Rust codebase is handing them a
 reason not to. The data interface mitigates this for using the tool and does
 nothing for correcting it, and that distinction should be read as a real
-limitation rather than a solved problem.
+limitation.
 
 Compile times and the learning curve are the third, and they are the ones that
-will be felt daily rather than argued about. A borrow checker fighting a change
+will be felt daily. A borrow checker fighting a change
 to how a fragment holds its material reference is time not spent on the model.
 
 There is also a reasonable case that C++ was rejected too fast. A C++ project
@@ -203,7 +202,7 @@ Rust, where writing it here would be a larger project than the tool. An
 atmosphere model with a licence that only ships as a Fortran library is the
 concrete shape this would take, and it is not hypothetical: it is issue #16's
 problem, and the answer there may be a forced non-Rust means held to the
-smallest surface rather than a change to this record.
+smallest surface, leaving this record as it is.
 
 A decision under issue #25 that bit identical output within one platform cannot
 be held even with everything above pinned, which would make the reproducibility
@@ -211,8 +210,8 @@ argument for this choice weaker than it is stated here.
 
 An operator constraint from outside that forbids an unsigned or unfamiliar
 binary and requires a package in a specific ecosystem instead. That is a
-distribution constraint rather than a language one, and it would be answered
-first by issue #96 rather than by rewriting the tool.
+distribution constraint, and issue #96 would answer it
+first, with no rewrite of the tool.
 
 ## What depends on this
 
@@ -234,4 +233,4 @@ count is not an input.
 
 Issue #20 and issue #92, the artefacts and the command surface, which carry the
 commitment made here that the extension surface for the field is data and a
-command line rather than the language.
+command line, and never the language.

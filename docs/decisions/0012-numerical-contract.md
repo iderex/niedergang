@@ -12,7 +12,7 @@ accepted
 
 Two people will run the same scenario on different machines and compare the
 answers. What agreement are they entitled to expect, stated as a property a test
-can check rather than as a hope, and what does the tool do about the parts of the
+can check, and what does the tool do about the parts of the
 arithmetic that no platform guarantees.
 
 Record 0008 fixed reproducibility on one machine at one version. Record 0002
@@ -31,7 +31,7 @@ starts. It is achievable, and record 0002 already holds most of what it needs:
 no relaxed floating point, no reassociation, a pinned toolchain and a pinned
 dependency set. What is left is the elementary functions, which come from the
 platform library and are not specified to the last bit, so holding this position
-means shipping an implementation of them rather than calling the platform's. It
+means shipping an implementation of them. It
 costs the work of validating that implementation, it costs speed on every
 trigonometric and exponential call in the integrator and the atmosphere lookup,
 and it costs it before anybody has measured whether the difference matters.
@@ -53,7 +53,7 @@ against every deliberate change.
 
 Bit-identical within a platform, toolchain version and commit as the enforced
 property, with a cross-platform tolerance published per quantity and measured
-rather than guessed. Taken below.
+on real targets. Taken below.
 
 On the elementary functions specifically.
 
@@ -68,7 +68,7 @@ a real piece of work, and it costs throughput in the innermost loop of the
 integrator.
 
 Call the platform library through one seam, so that the choice above can be made
-later as a change to one module rather than to every call site, and measure
+later as a change to one module, which no call site sees, and measure
 before making it. Taken below.
 
 ## Decision
@@ -97,13 +97,13 @@ formatter.
 
 The cross-platform half. No bit-level agreement is promised across targets. What
 is promised is a tolerance per output quantity, published, and derived from a
-measurement across the targets the project builds for rather than from the
+measurement across the targets the project builds for, and never from the
 observed spread of the current implementation.
 
 That measurement does not exist. Nothing is implemented, so no tolerance is
 published today, and no number appears in this record. A tolerance written now
 would be a guess wearing the clothes of a contract, which is worse than the
-absence, and the absence is stated in the tool's own output rather than only
+absence, and the absence is stated in the tool's own output as well as
 here: until the measurement exists, a run says that cross-platform agreement is
 unmeasured. This paragraph is a disclosure and it does not become a promise by
 being restated later.
@@ -114,18 +114,18 @@ and this record adds the rest.
 No relaxed floating point anywhere, in this tree or in any dependency that
 performs arithmetic on the tool's behalf. The language is understood to perform
 no reassociation or contraction on ordinary operators, and that is a claim
-rather than something this tree checks, because there is no code here for a
+that no check in this tree reads, because there is no code here for a
 check to read. So the rule is written as a rule and not as an inherited
 guarantee: no build setting, intrinsic or dependency that permits either is
 adopted, which includes a dependency built through a C compiler with fast math
 enabled.
 
-The target is named rather than detected. A build tuned to the machine that ran
+The target is named in the build. A build tuned to the machine that ran
 it makes the build host an input to the answer, so the target specification is
 fixed in the tree and a native tuning setting is not used for a released
 artefact.
 
-Every reduction has a fixed summation order, written into the code rather than
+Every reduction has a fixed summation order, written into the code and never
 inherited from whatever order the results arrived in. Summing a per-sample
 quantity in sample index order is deterministic; summing it in completion order
 is not, and both compile.
@@ -140,7 +140,7 @@ change.
 
 The pins record 0002 already requires, which are the exact toolchain in
 `rust-toolchain.toml` and the exact dependency set in `Cargo.lock`, are part of
-this contract rather than adjacent to it. A different toolchain version is a
+this contract. A different toolchain version is a
 different platform for the purpose of the property above.
 
 The functions whose platform variation was considered. The distinction is not
@@ -156,7 +156,7 @@ them freely.
 The division above is taken from the standard's own separation between the
 operations it requires and the ones it recommends. No clause is cited, because
 the text was not opened for this record, and a reader who needs the citation
-rather than the division should treat this paragraph as the claim it is.
+and not the division should treat this paragraph as the claim it is.
 
 Not guaranteed by the standard, and therefore the source of every cross-platform
 difference this record is about: the sine, cosine and tangent and their inverses,
@@ -178,9 +178,9 @@ Whether the tool ships its own. Not now, and the code is written so that it can.
 Every call to a function in the second list goes through one module, and no other
 module calls one directly. That module is the seam: adopting a portable
 implementation later is a change inside it, and issue #35 is where the rule that
-nothing bypasses it is refused by a machine rather than remembered.
+nothing bypasses it is refused by a machine.
 
-The condition that changes this is a measurement rather than an opinion. Once
+The condition that changes this is a measurement. Once
 the propagation regression set of issue #45 runs on more than one target, the
 spread on each published quantity is measurable, and if it is larger than what a
 user of the impact point needs, the answer is the portable implementation and
@@ -197,11 +197,12 @@ no judgement, and it is the property that makes a regression suite mean
 something.
 
 The cross-platform half is the one that cannot be had cheaply, and the reason to
-publish a measured tolerance rather than promise bits is that the measurement is
-the useful artefact either way. A number saying how far two targets drift on an
-impact point tells an operator something about the trajectory, and it is also
-exactly the number needed to decide whether the portable implementation is worth
-its cost. Promising bits first would spend that cost before knowing.
+publish a measured tolerance, where promising bits would be shorter, is that the
+measurement is the useful artefact either way. A number saying how far two
+targets drift on an impact point tells an operator something about the
+trajectory, and it is also exactly the number needed to decide whether the
+portable implementation is worth its cost. Promising bits first would spend that
+cost before knowing.
 
 Putting the elementary functions behind one seam is the part that keeps the
 option open. The alternative is a codebase where the decision would touch every
@@ -220,8 +221,8 @@ The strongest argument against is that bit-identical within a platform is a
 property that constrains the implementation for a benefit most users never see.
 An operator comparing an answer to a colleague's is usually on a different
 machine, which is the half this record does not promise, so the enforced property
-is largely a property for the people maintaining the tool rather than for the
-people using it.
+is largely a property for the people maintaining the tool, and only faintly for
+the people using it.
 
 The fixed summation order is the concrete cost. It forbids the reduction shape a
 parallel runtime gives for free and it will be felt on large sampling runs. A
@@ -229,7 +230,7 @@ tree reduction with a fixed shape recovers most of it and is more code than a
 plain parallel sum, and somebody will propose the plain one.
 
 Not shipping the elementary functions leaves the platform in the answer, and the
-seam is a discipline rather than a solution. Between today and the measurement,
+seam is a discipline. Between today and the measurement,
 two machines can disagree by an unstated amount, and a user who reads the
 enforced property quickly may take it for more than it says. The disclosure in
 the output is what stands between those two readings, and a disclosure is weaker
@@ -263,11 +264,11 @@ weakening the property.
 A dependency the tool genuinely needs whose result depends on processor features
 or thread count, where writing a replacement is a larger project than the tool.
 That would force a choice between the property and the dependency, and the choice
-belongs in a record rather than in a build file.
+belongs in a record.
 
 A decision under issue #26 or issue #31 that widens the supported targets to
 include one whose libraries differ more than the current set, which changes the
-size of the unmeasured gap rather than the shape of this record.
+size of the unmeasured gap and leaves the shape of this record standing.
 
 ## What depends on this
 
@@ -276,20 +277,18 @@ comparison that checks the enforced property and the cross-target measurement
 that the tolerance waits on.
 
 Issue #35, the greppable invariants gate, which is where the rule that nothing
-calls an elementary function outside the seam is refused rather than remembered,
+calls an elementary function outside the seam is refused by the gate,
 alongside the constants rule it already carries.
 
 Issue #29 and issue #33, the test gate and the coverage report, which run the
-comparison and which see the seam as one module rather than as a scattering of
-call sites.
+comparison and which see the seam as one module.
 
 Issue #40, the integrator, and issue #42, the atmosphere behind the interface,
 which are the two places the elementary functions are called most and where the
 seam is felt.
 
 Issue #71, the sampling implementation, which owns the fixed reduction order,
-and record 0008, whose determinism property this record extends rather than
-restates.
+and record 0008, whose determinism property this record extends.
 
 Issue #81, the validation standing a run prints, which carries the sentence
 saying cross-platform agreement is unmeasured for as long as it is.

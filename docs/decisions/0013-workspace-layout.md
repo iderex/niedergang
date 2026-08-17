@@ -13,7 +13,7 @@ accepted
 How is this tool divided into parts, which part may call which, and what may
 version control rewrite on the way in.
 
-The two halves are in one record because they share a deadline rather than a
+The two halves are in one record because they share a deadline and no
 subject. Both have to be settled before the thing they govern exists. A
 dependency direction agreed after the code is written is a refactor, and a text
 attribute agreed after the first data file lands is a fixture that already
@@ -29,14 +29,14 @@ reaches into file parsing. The layering would exist as an intention and the
 compiler would not hold it.
 
 A crate per file type. A parsers crate, a maths crate, a types crate. It divides
-along how the code is written rather than along what it is about, so a change to
+along how the code is written and not along what it is about, so a change to
 the atmosphere touches the maths crate, the types crate and the parsers crate,
 and every reviewer of that change is reviewing a third of it.
 
 A crate per physics layer, with a one-way dependency order. The split the layers
 already have in the model, so a change to the aerodynamics is a change inside one
 crate. It costs a workspace to set up, a name per crate, and the discipline to
-put a new type in the lowest crate that needs it rather than the nearest one.
+put a new type in the lowest crate that needs it.
 
 For the text attributes, three options. No `.gitattributes`, which leaves the
 behaviour to each clone's `core.autocrlf` and makes the bytes in a working tree a
@@ -56,7 +56,7 @@ in this order, and nothing may depend on anything later in it:
 `core` knows about quantities, frames, fragments and the errors the rest raise.
 It depends on nothing in this workspace. The type-level unit and frame rule of
 record 0004 lives here, so every crate above it inherits that rule by using these
-types rather than by remembering to.
+types.
 
 `model` is the physics of the environment and of a body in it: atmosphere,
 aerodynamics, thermal. Each is behind a trait declared here, which is what record
@@ -91,8 +91,8 @@ fixes that the only fetch is a separate command; this places the code that could
 make one in a single crate so that the claim is checkable by looking at one
 directory.
 
-Both are greppable rather than structural, and that is a weakness stated here
-rather than left for a reader to notice. Cargo refuses the dependency direction
+Both are greppable and not structural, and that is a weakness stated here
+and not left for a reader to notice. Cargo refuses the dependency direction
 because the direction is what a manifest declares. Nothing in Cargo refuses a
 `println!` in `risk`. Issue #35 is where these two become refusals.
 
@@ -118,7 +118,7 @@ The one-way order is what makes a test possible. A propagation test that has to
 construct a population grid to compile is a test nobody writes, and the layer
 that reaches backwards is exactly the layer that gets tested last.
 
-Putting the traits in the consuming crate rather than in `core` is the part most
+Putting the traits in the consuming crate is the part most
 likely to be argued with, so its reason is here. `core` is meant to know about
 quantities, frames and fragments and nothing else. A population grid trait in
 `core` would put the shape of a risk calculation into the crate the frames live
@@ -147,7 +147,7 @@ of the risk, not proof that six is the right number.
 
 A crate boundary is also a compile-time cost and an API surface. A type that
 wants to move from `model` to `core` is a coordinated change across a version
-bump rather than a file move, and in a workspace with a single consumer that
+bump, and in a workspace with a single consumer that
 ceremony buys nothing on the day it is paid.
 
 The one-way order forces awkwardness somewhere, and here it is forced onto
@@ -170,7 +170,7 @@ the failure it prevents.
 
 A layer that turns out to need something above it. The named candidate is the
 breakup model: if a thermally triggered breakup ever has to consult something in
-`risk`, the order is wrong rather than the crate.
+`risk`, the order is wrong and the crate is not.
 
 A measurement that the workspace is slow to build. No number is quoted, because
 there is nothing to measure yet, and this is the shape of thing that would change
@@ -182,7 +182,7 @@ would make the rule name a set.
 
 A fixture format that is genuinely text and genuinely needs to be diffable. The
 `-text` default would then be wrong for that one class and the list gains an
-entry rather than the default changing.
+entry and the default stays.
 
 ## What depends on this
 
