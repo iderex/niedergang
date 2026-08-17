@@ -16,3 +16,9 @@ refused by a check yet, because there is no source here for a check to read.
 says of each part whether it is enforced or a claim.
 
 See [NOTICE.md](NOTICE.md) for the intended-use notice.
+
+## License
+
+AGPL-3.0, copyright 2026 Nils Lehnen.
+
+The full text is in [LICENSE](LICENSE).
