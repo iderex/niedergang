@@ -24,6 +24,10 @@ the open tracker.
 Use GitHub's private vulnerability reporting on this repository, through the
 Security tab, Report a vulnerability. It is enabled:
 
+The form is here, without navigating:
+
+<https://github.com/iderex/niedergang/security/advisories/new>
+
     gh api repos/iderex/niedergang/private-vulnerability-reporting
     {"enabled":true}
 
